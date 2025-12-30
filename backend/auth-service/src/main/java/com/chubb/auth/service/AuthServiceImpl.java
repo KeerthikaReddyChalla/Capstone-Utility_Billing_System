@@ -1,4 +1,4 @@
-package com.chubb.auth.service.impl;
+package com.chubb.auth.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,8 +13,8 @@ import com.chubb.auth.dto.JwtResponse;
 import com.chubb.auth.dto.LoginRequest;
 import com.chubb.auth.dto.RegisterRequest;
 import com.chubb.auth.dto.ResetPasswordRequest;
-import com.chubb.auth.model.PasswordResetToken;
-import com.chubb.auth.model.User;
+import com.chubb.auth.models.PasswordResetToken;
+import com.chubb.auth.models.User;
 import com.chubb.auth.repository.PasswordResetTokenRepository;
 import com.chubb.auth.repository.UserRepository;
 import com.chubb.auth.security.JwtUtil;
@@ -79,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
         tokenRepository.deleteByUserId(user.getId());
         tokenRepository.save(resetToken);
 
-        // 🔔 RabbitMQ event will be published in Notification iteration
+  
     }
 
     @Override

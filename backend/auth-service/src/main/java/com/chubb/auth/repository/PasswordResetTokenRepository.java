@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.capstone.auth.model.PasswordResetToken;
+import com.chubb.auth.models.PasswordResetToken;
 
 public interface PasswordResetTokenRepository
         extends MongoRepository<PasswordResetToken, String> {

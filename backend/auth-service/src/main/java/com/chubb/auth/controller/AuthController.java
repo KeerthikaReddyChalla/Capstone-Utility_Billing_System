@@ -14,7 +14,7 @@ import com.chubb.auth.dto.JwtResponse;
 import com.chubb.auth.dto.LoginRequest;
 import com.chubb.auth.dto.RegisterRequest;
 import com.chubb.auth.dto.ResetPasswordRequest;
-import com.chubb.auth.model.User;
+import com.chubb.auth.models.User;
 import com.chubb.auth.service.AuthService;
 
 import jakarta.validation.Valid;
