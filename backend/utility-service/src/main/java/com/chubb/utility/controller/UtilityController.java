@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.chubb.utility.dto.UtilityRequest;
 import com.chubb.utility.dto.UtilityResponse;
+import com.chubb.utility.service.TariffService;
 import com.chubb.utility.service.UtilityService;
 
 import jakarta.validation.Valid;
@@ -17,10 +18,12 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/utilities")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN','BILLING_OFFICER')")
+
 public class UtilityController {
 
     private final UtilityService service;
+    private final TariffService tariffService;
 
     @PostMapping
     public ResponseEntity<UtilityResponse> create(@Valid @RequestBody UtilityRequest req) {
@@ -42,4 +45,6 @@ public class UtilityController {
                                   @Valid @RequestBody UtilityRequest req) {
         return service.update(id, req);
     }
+    
+
 }
