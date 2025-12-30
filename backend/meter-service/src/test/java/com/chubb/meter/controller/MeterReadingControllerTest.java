@@ -41,15 +41,13 @@ class MeterReadingControllerTest {
     void createMeterReading_success() throws Exception {
 
         MeterReadingRequest request = new MeterReadingRequest();
-        request.setConsumerId("C1");
-        request.setUtilityId("U1");
+        request.setConnectionId("CONN1");
         request.setReadingValue(100);
         request.setReadingDate(LocalDate.now());
 
         MeterReadingResponse response = MeterReadingResponse.builder()
                 .id("R1")
-                .consumerId("C1")
-                .utilityId("U1")
+                .connectionId("CONN1")
                 .readingValue(100)
                 .build();
 
@@ -59,22 +57,22 @@ class MeterReadingControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.consumerId").value("C1"));
+                .andExpect(jsonPath("$.connectionId").value("CONN1"));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void getByConsumer_success() throws Exception {
+    void getByConnection_success() throws Exception {
 
-        when(service.getByConsumer("C1"))
+        when(service.getByConnection("CONN1"))
                 .thenReturn(List.of(
                         MeterReadingResponse.builder()
                                 .id("R1")
-                                .consumerId("C1")
+                                .connectionId("CONN1")
                                 .build()
                 ));
 
-        mockMvc.perform(get("/meter-readings/C1"))
+        mockMvc.perform(get("/meter-readings/CONN1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value("R1"));
     }
@@ -83,15 +81,15 @@ class MeterReadingControllerTest {
     @WithMockUser(roles = "ADMIN")
     void getLatest_success() throws Exception {
 
-        when(service.getLatest("C1"))
+        when(service.getLatest("CONN1"))
                 .thenReturn(
                         MeterReadingResponse.builder()
                                 .id("R2")
-                                .consumerId("C1")
+                                .connectionId("CONN1")
                                 .build()
                 );
 
-        mockMvc.perform(get("/meter-readings/latest/C1"))
+        mockMvc.perform(get("/meter-readings/latest/CONN1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("R2"));
     }

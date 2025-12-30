@@ -1,19 +1,18 @@
 package com.chubb.meter.repository;
 
+import com.chubb.meter.models.MeterReading;
+import org.springframework.data.mongodb.repository.MongoRepository;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
-
-import com.chubb.meter.models.MeterReading;
-
 public interface MeterReadingRepository extends MongoRepository<MeterReading, String> {
 
-    boolean existsByConsumerIdAndUtilityIdAndReadingDate(
-            String consumerId, String utilityId, LocalDate readingDate);
+    boolean existsByConnectionIdAndReadingDate(String connectionId, LocalDate readingDate);
 
-    List<MeterReading> findByConsumerId(String consumerId);
+    List<MeterReading> findByConnectionId(String connectionId);
 
-    Optional<MeterReading> findTopByConsumerIdOrderByReadingDateDesc(String consumerId);
+    Optional<MeterReading> findTopByConnectionIdOrderByReadingDateDesc(String connectionId);
+    List<MeterReading> findTop2ByConnectionIdOrderByReadingDateDesc(String connectionId);
 }

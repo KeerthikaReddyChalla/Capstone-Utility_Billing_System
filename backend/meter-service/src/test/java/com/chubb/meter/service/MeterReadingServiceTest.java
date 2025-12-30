@@ -34,16 +34,15 @@ class MeterReadingServiceTest {
 
     @BeforeEach
     void setUp() {
+
         request = new MeterReadingRequest();
-        request.setConsumerId("C1");
-        request.setUtilityId("U1");
+        request.setConnectionId("CONN1");
         request.setReadingValue(120.5);
         request.setReadingDate(LocalDate.now());
 
         reading = MeterReading.builder()
                 .id("R1")
-                .consumerId("C1")
-                .utilityId("U1")
+                .connectionId("CONN1")
                 .readingValue(120.5)
                 .readingDate(LocalDate.now())
                 .createdAt(LocalDateTime.now())
@@ -52,8 +51,9 @@ class MeterReadingServiceTest {
 
     @Test
     void createMeterReading_success() {
-        when(repository.existsByConsumerIdAndUtilityIdAndReadingDate(
-                anyString(), anyString(), any()))
+
+        when(repository.existsByConnectionIdAndReadingDate(
+                anyString(), any()))
                 .thenReturn(false);
 
         when(repository.save(any(MeterReading.class)))
@@ -62,7 +62,7 @@ class MeterReadingServiceTest {
         var response = service.create(request);
 
         assertNotNull(response);
-        assertEquals("C1", response.getConsumerId());
+        assertEquals("CONN1", response.getConnectionId());
         assertEquals(120.5, response.getReadingValue());
 
         verify(repository).save(any(MeterReading.class));
@@ -70,8 +70,9 @@ class MeterReadingServiceTest {
 
     @Test
     void createMeterReading_duplicate_throwsException() {
-        when(repository.existsByConsumerIdAndUtilityIdAndReadingDate(
-                anyString(), anyString(), any()))
+
+        when(repository.existsByConnectionIdAndReadingDate(
+                anyString(), any()))
                 .thenReturn(true);
 
         assertThrows(DuplicateReadingException.class,
@@ -81,22 +82,24 @@ class MeterReadingServiceTest {
     }
 
     @Test
-    void getByConsumer_returnsList() {
-        when(repository.findByConsumerId("C1"))
+    void getByConnection_returnsList() {
+
+        when(repository.findByConnectionId("CONN1"))
                 .thenReturn(List.of(reading));
 
-        var result = service.getByConsumer("C1");
+        var result = service.getByConnection("CONN1");
 
         assertEquals(1, result.size());
-        assertEquals("U1", result.get(0).getUtilityId());
+        assertEquals("CONN1", result.get(0).getConnectionId());
     }
 
     @Test
     void getLatest_success() {
-        when(repository.findTopByConsumerIdOrderByReadingDateDesc("C1"))
+
+        when(repository.findTopByConnectionIdOrderByReadingDateDesc("CONN1"))
                 .thenReturn(Optional.of(reading));
 
-        var result = service.getLatest("C1");
+        var result = service.getLatest("CONN1");
 
         assertNotNull(result);
         assertEquals("R1", result.getId());
@@ -104,10 +107,11 @@ class MeterReadingServiceTest {
 
     @Test
     void getLatest_notFound() {
-        when(repository.findTopByConsumerIdOrderByReadingDateDesc("C1"))
+
+        when(repository.findTopByConnectionIdOrderByReadingDateDesc("CONN1"))
                 .thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,
-                () -> service.getLatest("C1"));
+                () -> service.getLatest("CONN1"));
     }
 }

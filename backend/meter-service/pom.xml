@@ -37,7 +37,11 @@
     <artifactId>spring-security-test</artifactId>
     <scope>test</scope>
 </dependency>
-
+<!-- Feign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
 
         <!-- MongoDB -->
         <dependency>
@@ -76,6 +80,10 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+        	<groupId>org.springframework.boot</groupId>
+        	<artifactId>spring-boot-devtools</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

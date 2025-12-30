@@ -11,11 +11,14 @@ import java.time.LocalDate;
 public class MeterReadingRequest {
 
     @NotBlank
-    private String consumerId;
+    private String connectionId;
+    
+    @NotBlank
+    private String consumerId;  
 
     @NotBlank
     private String utilityId;
-
+    
     @Positive
     private double readingValue;
 
