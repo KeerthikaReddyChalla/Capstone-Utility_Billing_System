@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,12 @@ public class ConsumerController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ConsumerResponseDTO> create(@Valid @RequestBody ConsumerRequestDTO dto) {
+    	Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println(">>> Authentication object = " + auth);
+        System.out.println(">>> Authorities = " + auth.getAuthorities());
+
         return new ResponseEntity<>(service.createConsumer(dto), HttpStatus.CREATED);
     }
 
@@ -35,5 +43,12 @@ public class ConsumerController {
     public ResponseEntity<List<ConsumerResponseDTO>> all() {
         return ResponseEntity.ok(service.getAll());
     }
+    @DeleteMapping("/{consumerId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String consumerId) {
+        service.deleteConsumer(consumerId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
 

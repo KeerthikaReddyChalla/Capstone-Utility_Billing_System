@@ -52,4 +52,11 @@ public class ConsumerService {
                 .address(c.getAddress())
                 .build();
     }
+    public void deleteConsumer(String consumerId) {
+        if (!repository.existsById(consumerId)) {
+            throw new ResourceNotFoundException("Consumer not found");
+        }
+        repository.deleteById(consumerId);
+    }
+
 }

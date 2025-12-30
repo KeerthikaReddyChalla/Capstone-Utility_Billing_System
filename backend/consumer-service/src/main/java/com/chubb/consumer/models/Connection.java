@@ -15,6 +15,5 @@ public class Connection {
 
     private String consumerId;
     private String utilityId;
-    private String meterNumber;
     private boolean active;
 }
