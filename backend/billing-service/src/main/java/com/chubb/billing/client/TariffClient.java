@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 @FeignClient(name = "utility-service")
 public interface TariffClient {
 
-    @GetMapping("/tariffs/utility/{utilityId}")
-    Double getRate(@PathVariable String utilityId);
+    @GetMapping("/tariffs/utility/{utilityId}/rate")
+    Double getRate(
+            @PathVariable("utilityId") String utilityId
+    );
 }

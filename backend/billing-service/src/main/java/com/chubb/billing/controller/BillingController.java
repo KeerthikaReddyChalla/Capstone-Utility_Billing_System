@@ -25,6 +25,8 @@ public class BillingController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('BILLING_OFFICER')")
     public BillResponse generate(@Valid @RequestBody GenerateBillRequest req) {
+    	System.out.println("STEP 1 → ENTERED BillingController.generate()");
+        System.out.println("REQUEST = " + req);
         return service.generateBill(req);
     }
 
@@ -33,4 +35,12 @@ public class BillingController {
     public List<Bill> getByConsumer(@PathVariable String consumerId) {
         return service.getBillsByConsumer(consumerId);
     }
+    
+    @PutMapping("/{billId}/status")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ACCOUNTS_OFFICER')")
+    public void markBillAsPaid(@PathVariable String billId) {
+        service.markBillAsPaid(billId);
+    }
+
 }

@@ -13,13 +13,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.chubb.billing.client.MeterClient;
 import com.chubb.billing.client.TariffClient;
 import com.chubb.billing.dto.GenerateBillRequest;
+import com.chubb.billing.dto.MeterReadingResponse;
+import com.chubb.billing.models.Bill;
 import com.chubb.billing.repository.BillRepository;
 
 @ExtendWith(MockitoExtension.class)
 class BillingServiceTest {
 
     @Mock
-    private BillRepository repo;
+    private BillRepository billRepository;
 
     @Mock
     private MeterClient meterClient;
@@ -28,24 +30,38 @@ class BillingServiceTest {
     private TariffClient tariffClient;
 
     @InjectMocks
-    private BillingService service;
+    private BillingService billingService;
 
     @Test
     void generateBill_success() {
 
-        when(meterClient.getLatestUnits("c1")).thenReturn(100.0);
-        when(tariffClient.getRate("u1")).thenReturn(5.0);
-        when(repo.save(any())).thenAnswer(i -> i.getArgument(0));
+     
+        GenerateBillRequest request = new GenerateBillRequest();
+        request.setConnectionId("CONN_123");
+        request.setBillingCycle(LocalDate.now());
 
-        GenerateBillRequest req = new GenerateBillRequest();
-        req.setConsumerId("c1");
-        req.setUtilityId("u1");
-        req.setBillingCycle(LocalDate.now());
+        MeterReadingResponse latest = new MeterReadingResponse();
+        latest.setConnectionId("CONN_123");
+        latest.setConsumerId("CONS_001");
+        latest.setUtilityId("ELEC");
+        latest.setReadingValue(220);
 
-        service.generateBill(req);
+        MeterReadingResponse previous = new MeterReadingResponse();
+        previous.setReadingValue(100);
 
-        verify(repo, times(1)).save(any());
-        verify(meterClient, times(1)).getLatestUnits("c1");
-        verify(tariffClient, times(1)).getRate("u1");
+        when(meterClient.getLatest("CONN_123")).thenReturn(latest);
+        when(meterClient.getPrevious("CONN_123")).thenReturn(previous);
+        when(tariffClient.getRate("ELEC")).thenReturn(5.0);
+        when(billRepository.save(any(Bill.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+      
+        billingService.generateBill(request);
+
+     
+        verify(meterClient).getLatest("CONN_123");
+        verify(meterClient).getPrevious("CONN_123");
+        verify(tariffClient).getRate("ELEC");
+        verify(billRepository).save(any(Bill.class));
     }
 }

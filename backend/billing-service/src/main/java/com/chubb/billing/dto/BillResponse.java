@@ -9,8 +9,12 @@ import java.time.LocalDate;
 @Data
 @Builder
 public class BillResponse {
+
     private String billId;
-    private String consumerId;
+
+    private String connectionId;   
+    private String consumerId;     
+
     private double amount;
     private BillStatus status;
     private LocalDate billingCycle;

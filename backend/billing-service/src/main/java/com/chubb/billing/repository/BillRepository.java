@@ -8,4 +8,5 @@ import com.chubb.billing.models.Bill;
 
 public interface BillRepository extends MongoRepository<Bill, String> {
     List<Bill> findByConsumerId(String consumerId);
+    
 }

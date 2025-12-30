@@ -10,10 +10,7 @@ import java.time.LocalDate;
 public class GenerateBillRequest {
 
     @NotBlank
-    private String consumerId;
-
-    @NotBlank
-    private String utilityId;
+    private String connectionId;
 
     @NotNull
     private LocalDate billingCycle;
