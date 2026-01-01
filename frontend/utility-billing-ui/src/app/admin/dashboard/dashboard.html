@@ -1,0 +1,66 @@
+<app-navbar></app-navbar>
+
+<div class="admin-container">
+
+  <!-- TAB NAV -->
+  <div class="admin-tabs">
+    <button (click)="activeTab='approvals'" [class.active]="activeTab==='approvals'">
+      Approvals
+    </button>
+    <button (click)="activeTab='utilities'" [class.active]="activeTab==='utilities'">
+      Utilities
+    </button>
+    <button (click)="activeTab='tariffs'" [class.active]="activeTab==='tariffs'">
+      Tariffs
+    </button>
+  </div>
+
+  <!-- APPROVALS TAB (INLINE) -->
+  <div *ngIf="activeTab==='approvals'">
+
+    <h3>Pending User Approvals</h3>
+
+    <button class="tab-btn" (click)="openApprovals()">
+      Load Pending Users
+    </button>
+
+    <p *ngIf="loading" class="info">Loading pending users...</p>
+
+    <table *ngIf="!loading && pendingUsers.length > 0">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let user of pendingUsers">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td class="action-cell">
+            <button class="approve-btn" (click)="approveUser(user.id)">
+              Approve
+            </button>
+            <button class="disapprove-btn" (click)="disapproveUser(user.id)">
+              Disapprove
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p *ngIf="!loading && pendingUsers.length === 0" class="info">
+      No pending users to approve
+    </p>
+
+  </div>
+
+  <!-- UTILITIES TAB -->
+  <app-utilities *ngIf="activeTab==='utilities'"></app-utilities>
+
+  <!-- TARIFFS TAB -->
+  <app-tariffs *ngIf="activeTab==='tariffs'"></app-tariffs>
+
+</div>

@@ -1,0 +1,16 @@
+<h3>Utilities</h3>
+
+<div class="card">
+  <input placeholder="Name" [(ngModel)]="newUtility.name">
+  <input placeholder="Description" [(ngModel)]="newUtility.description">
+  <button (click)="create()">Add Utility</button>
+</div>
+
+<table>
+  <tr *ngFor="let u of utilities">
+    <td>{{u.name}}</td>
+    <td>{{u.description}}</td>
+    <td><button class="danger" (click)="delete(u.id)">Delete</button></td>
+  </tr>
+</table>
+

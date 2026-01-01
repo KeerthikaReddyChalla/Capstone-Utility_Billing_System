@@ -1,0 +1,23 @@
+<h3>Tariffs</h3>
+
+<div class="card">
+  <select [(ngModel)]="newTariff.utilityId">
+    <option value="">Select Utility</option>
+    <option *ngFor="let u of utilities" [value]="u.id">{{u.name}}</option>
+  </select>
+
+  <input placeholder="Tariff Name" [(ngModel)]="newTariff.name">
+  <input type="number" placeholder="Rate" [(ngModel)]="newTariff.ratePerUnit">
+  <input type="date" [(ngModel)]="newTariff.effectiveFrom">
+
+  <button (click)="create()">Add Tariff</button>
+</div>
+
+<table>
+  <tr *ngFor="let t of tariffs">
+    <td>{{t.name}}</td>
+    <td>{{t.ratePerUnit}}</td>
+    <td>{{t.effectiveFrom}}</td>
+    <td><button class="danger" (click)="delete(t.id)">Delete</button></td>
+  </tr>
+</table>
