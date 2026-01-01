@@ -1,0 +1,38 @@
+.navbar {
+  height: 56px;
+  background-color: #1f2937;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.brand {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.role {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.logout-btn {
+  background-color: #ef4444;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #dc2626;
+}
