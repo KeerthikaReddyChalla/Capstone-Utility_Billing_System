@@ -9,27 +9,26 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-@Configuration
+
 @RequiredArgsConstructor
+@Configuration
 public class FeignAuthInterceptor {
 
     @Bean
     public RequestInterceptor requestInterceptor() {
-        return new RequestInterceptor() {
-            @Override
-            public void apply(RequestTemplate template) {
-                ServletRequestAttributes attrs =
-                        (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        return template -> {
+            ServletRequestAttributes attrs =
+                    (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
-                if (attrs != null) {
-                    HttpServletRequest request = attrs.getRequest();
-                    String authHeader = request.getHeader("Authorization");
+            if (attrs != null) {
+                String authHeader =
+                        attrs.getRequest().getHeader("Authorization");
 
-                    if (authHeader != null) {
-                        template.header("Authorization", authHeader);
-                    }
+                if (authHeader != null) {
+                    template.header("Authorization", authHeader);
                 }
             }
         };
     }
 }
+

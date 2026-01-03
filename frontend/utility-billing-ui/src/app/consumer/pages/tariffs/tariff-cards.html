@@ -1,0 +1,17 @@
+<section class="tariff-grid">
+  <div
+    class="tariff-card"
+    *ngFor="let plan of tariffs"
+    [class.highlight]="plan.highlight"
+  >
+    <h3>{{ plan.title }}</h3>
+    <span class="subtitle">{{ plan.subtitle }}</span>
+
+    <div class="rate">{{ plan.rateText }}</div>
+    <p>{{ plan.description }}</p>
+
+    <button (click)="selectTariff(plan)">
+      Choose Plan
+    </button>
+  </div>
+</section>

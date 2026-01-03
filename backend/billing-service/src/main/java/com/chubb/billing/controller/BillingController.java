@@ -42,5 +42,11 @@ public class BillingController {
     public void markBillAsPaid(@PathVariable String billId) {
         service.markBillAsPaid(billId);
     }
+    @GetMapping
+    @PreAuthorize("hasRole('BILLING_OFFICER')")
+    public List<Bill> getAllBills() {
+        return service.getAllBills();
+    }
+
 
 }

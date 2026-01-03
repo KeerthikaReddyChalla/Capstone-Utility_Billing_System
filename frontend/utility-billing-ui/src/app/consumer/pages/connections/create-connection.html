@@ -1,0 +1,73 @@
+<div class="connection-container">
+
+  <h2>Request New Connection</h2>
+  <p class="subtitle">
+    Select utility and tariff plan. Your request will be approved by admin.
+  </p>
+
+  <!-- REQUEST FORM -->
+  <div *ngIf="!submitted" class="form-card">
+
+    <label>Utility</label>
+    <select (change)="onUtilitySelect($event)">
+      <option value="">Select utility</option>
+      <option *ngFor="let u of utilities" [value]="u.id">
+        {{ u.name }}
+      </option>
+    </select>
+
+    <label>Tariff Plan</label>
+    <select [(ngModel)]="form.tariffType">
+      <option value="">Select tariff</option>
+      <option value="RESIDENTIAL_FLAT">Residential Flat</option>
+      <option value="RESIDENTIAL_STANDARD">Residential Standard</option>
+      <option value="COMMERCIAL_STANDARD">Commercial Standard</option>
+      <option value="GOVT_SUBSIDIZED">Government Subsidized</option>
+    </select>
+
+    <button class="submit-btn" (click)="submit()">
+      Submit Request
+    </button>
+  </div>
+
+  <!-- SUCCESS -->
+  <div *ngIf="submitted" class="success-card">
+    <h3>Request Submitted</h3>
+    <p>Your connection request has been sent for admin approval.</p>
+  </div>
+
+  <!-- CONNECTION LIST -->
+  <div class="connections-section">
+    <h3>Current Connections</h3>
+
+    <div *ngIf="loadingConnections">
+      Loading connections...
+    </div>
+
+    <table *ngIf="!loadingConnections && connections.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Utility</th>
+          <th>Tariff</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of connections">
+          <td>{{ c.id }}</td>
+          <td>{{ c.utilityId }}</td>
+          <td>{{ c.tariffType }}</td>
+          <td>
+            {{ c.active ? 'ACTIVE' : 'INACTIVE' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!loadingConnections && connections.length === 0">
+      No connections yet
+    </div>
+  </div>
+
+</div>

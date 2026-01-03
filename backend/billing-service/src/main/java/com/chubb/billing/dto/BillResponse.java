@@ -12,9 +12,14 @@ public class BillResponse {
 
     private String billId;
 
-    private String connectionId;   
-    private String consumerId;     
+    private String connectionId;
+    private String consumerId;
 
+    private String consumerName;
+    private String consumerEmail;
+    private String utilityName;
+
+    private double unitsConsumed;
     private double amount;
     private BillStatus status;
     private LocalDate billingCycle;

@@ -1,0 +1,33 @@
+.tariff-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.tariff-card {
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+
+.tariff-card:hover {
+  transform: translateY(-4px);
+}
+
+.tariff-card.highlight {
+  border: 2px solid #2563eb;
+}
+
+.rate {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 16px 0;
+}
+
+button {
+  width: 100%;
+  margin-top: 16px;
+}

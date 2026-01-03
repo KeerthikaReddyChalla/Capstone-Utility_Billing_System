@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.chubb.utility.dto.UtilityRequest;
 import com.chubb.utility.dto.UtilityResponse;
+import com.chubb.utility.exception.ResourceConflictException;
 import com.chubb.utility.exception.ResourceNotFoundException;
 import com.chubb.utility.models.Utility;
+import com.chubb.utility.repository.TariffRepository;
 import com.chubb.utility.repository.UtilityRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class UtilityService {
 
     private final UtilityRepository repository;
+    private final TariffRepository tariffRepo;
 
     public UtilityResponse create(UtilityRequest req) {
         Utility utility = Utility.builder()
@@ -57,5 +60,20 @@ public class UtilityService {
                 .description(u.getDescription())
                 .active(u.isActive())
                 .build();
+    }
+    public void delete(String utilityId) {
+
+        if (!repository.existsById(utilityId)) {
+            throw new ResourceNotFoundException(
+                    "Utility not found with id: " + utilityId);
+        }
+
+
+        if (!tariffRepo.findByUtilityId(utilityId).isEmpty()) {
+            throw new ResourceConflictException(
+                    "Cannot delete utility. Tariffs exist for this utility.");
+        }
+
+        repository.deleteById(utilityId);
     }
 }

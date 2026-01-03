@@ -21,25 +21,25 @@ public class ReportController {
     }
 
     @GetMapping("/monthly-revenue")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTS_OFFICER')")
+    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTS_OFFICER', 'BILLING_OFFICER')")
     public ResponseEntity<List<Document>> monthlyRevenue() {
         return ResponseEntity.ok(service.getMonthlyRevenue());
     }
 
     @GetMapping("/outstanding-dues")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTS_OFFICER')")
+    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTS_OFFICER', 'BILLING_OFFICER')")
     public ResponseEntity<List<Document>> outstandingDues() {
         return ResponseEntity.ok(service.getOutstandingDues());
     }
 
     @GetMapping("/consumption-by-utility")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN', 'BILLING_OFFICER')")
     public ResponseEntity<List<Document>> consumptionByUtility() {
         return ResponseEntity.ok(service.getConsumptionByUtility());
     }
 
     @GetMapping("/consumer-summary/{consumerId}")
-    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTS_OFFICER')")
+    @PreAuthorize("hasAnyRole('ADMIN','ACCOUNTS_OFFICER', 'BILLING_OFFICER') ")
     public ResponseEntity<Map<String, Object>> consumerSummary(
             @PathVariable String consumerId) {
         return ResponseEntity.ok(service.getConsumerSummary(consumerId));

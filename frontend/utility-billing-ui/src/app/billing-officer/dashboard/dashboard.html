@@ -1,2 +1,75 @@
-<app-navbar></app-navbar>
-<p>dashboard works!</p>
+<div class="page">
+
+  <h2>Bills & Analytics</h2>
+  <p class="subtitle">Billing officer operational dashboard</p>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="card">
+      <span>Total Bills</span>
+      <strong>{{ stats.totalBills }}</strong>
+    </div>
+    <div class="card">
+      <span>Pending</span>
+      <strong>{{ stats.pending }}</strong>
+    </div>
+    <div class="card">
+      <span>Overdue</span>
+      <strong>{{ stats.overdue }}</strong>
+    </div>
+    <div class="card">
+      <span>Total Consumption</span>
+      <strong>{{ stats.totalConsumption }} units</strong>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="charts">
+    <div class="chart-card">
+      <h4>Consumption Trend</h4>
+      <canvas id="consumptionChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h4>Utility-wise Consumption</h4>
+      <canvas id="utilityChart"></canvas>
+    </div>
+  </div>
+
+  <!-- BILLS TABLE -->
+  <div class="table-card">
+    <h4>Generated Bills</h4>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Bill ID</th>
+          <th>Consumer</th>
+          <th>Utility</th>
+          <th>Units</th>
+          <th>Amount</th>
+          <th>Cycle</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let bill of bills">
+          <td>{{ bill.id | slice:0:8 }}</td>
+          <td>{{ bill.consumerName }}</td>
+          <td>{{ bill.utilityName }}</td>
+          <td>{{ bill.unitsConsumed }}</td>
+          <td>₹ {{ bill.amount }}</td>
+          <td>{{ bill.billingCycle | date:'MMM yyyy' }}</td>
+          <td>
+            <span class="badge" [ngClass]="bill.status.toLowerCase()">
+              {{ bill.status }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</div>

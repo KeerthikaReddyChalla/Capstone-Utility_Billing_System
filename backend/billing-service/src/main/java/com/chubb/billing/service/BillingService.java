@@ -1,7 +1,9 @@
 package com.chubb.billing.service;
 
+import com.chubb.billing.client.ConsumerClient;
 import com.chubb.billing.client.MeterClient;
 import com.chubb.billing.client.TariffClient;
+import com.chubb.billing.client.UtilityClient;
 import com.chubb.billing.dto.*;
 import com.chubb.billing.models.*;
 import com.chubb.billing.repository.BillRepository;
@@ -18,6 +20,8 @@ public class BillingService {
     private final BillRepository billRepository;
     private final MeterClient meterClient;
     private final TariffClient tariffClient;
+    private final ConsumerClient consumerClient;
+    private final UtilityClient utilityClient;
 
     public BillResponse generateBill(GenerateBillRequest request) {
 
@@ -90,6 +94,11 @@ public class BillingService {
             System.out.println("ERROR: Tariff rate is NULL for utilityId = " + latest.getUtilityId());
             throw new IllegalStateException("Tariff not found for utility " + latest.getUtilityId());
         }
+        ConsumerResponse consumer =
+                consumerClient.getConsumer(latest.getConsumerId());
+
+        UtilityResponse utility =
+                utilityClient.getUtility(latest.getUtilityId());
 
         double amount = unitsConsumed * rate;
         System.out.println("Final bill amount calculated = " + amount);
@@ -97,25 +106,37 @@ public class BillingService {
         Bill bill = Bill.builder()
                 .connectionId(latest.getConnectionId())
                 .consumerId(latest.getConsumerId())
+                .utilityId(latest.getUtilityId())
+                .consumerName(consumer.getFullName())
+                .consumerEmail(consumer.getEmail())
+                .utilityName(utility.getName())
                 .billingCycle(request.getBillingCycle())
                 .unitsConsumed(unitsConsumed)
                 .amount(amount)
                 .status(BillStatus.GENERATED)
                 .build();
-
         Bill saved = billRepository.save(bill);
         System.out.println("Bill saved successfully with id = " + saved.getId());
 
         System.out.println("=== BILL GENERATION COMPLETED ===");
 
-        return BillResponse.builder()
-                .billId(saved.getId())
-                .connectionId(saved.getConnectionId())
-                .consumerId(saved.getConsumerId())
-                .amount(saved.getAmount())
-                .status(saved.getStatus())
-                .billingCycle(saved.getBillingCycle())
-                .build();
+        
+        
+        		return BillResponse.builder()
+        		        .billId(bill.getId())
+        		        .connectionId(bill.getConnectionId())
+        		        .consumerId(bill.getConsumerId())
+
+        		        .consumerName(consumer.getFullName())
+        		        .consumerEmail(consumer.getEmail())
+        		        .utilityName(utility.getName())
+
+        		        .unitsConsumed(bill.getUnitsConsumed())
+        		        .amount(bill.getAmount())
+        		        .status(bill.getStatus())
+        		        .billingCycle(bill.getBillingCycle())
+        		        .build();
+
     }
 
     public List<Bill> getBillsByConsumer(String consumerId) {
@@ -131,5 +152,9 @@ public class BillingService {
 
         billRepository.save(bill);
     }
+    public List<Bill> getAllBills() {
+        return billRepository.findAll();
+    }
+
 
 }

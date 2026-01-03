@@ -27,4 +27,8 @@ public class Bill {
 
     private BillStatus status;
     private LocalDateTime generatedAt;
+    private String consumerName;
+
+    private String consumerEmail;
+    private String utilityName;
 }

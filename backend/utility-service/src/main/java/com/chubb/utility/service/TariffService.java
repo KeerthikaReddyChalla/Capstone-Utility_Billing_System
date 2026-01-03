@@ -22,7 +22,6 @@ public class TariffService {
     private final TariffRepository tariffRepository;
     private final UtilityRepository utilityRepository;
 
-
     public TariffResponse create(CreateTariffRequest request) {
 
         if (!utilityRepository.existsById(request.getUtilityId())) {
@@ -32,53 +31,30 @@ public class TariffService {
 
         Tariff tariff = Tariff.builder()
                 .utilityId(request.getUtilityId())
-                .name(request.getName())
+                .tariffType(request.getTariffType())
                 .ratePerUnit(request.getRatePerUnit())
-                .effectiveFrom(request.getEffectiveFrom())
+                .fixedCharge(request.getFixedCharge())
                 .active(true)
                 .build();
 
         return map(tariffRepository.save(tariff));
     }
 
-
     public TariffResponse update(String tariffId, UpdateTariffRequest request) {
 
         Tariff tariff = tariffRepository.findById(tariffId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Tariff not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Tariff not found"));
 
-        tariff.setName(request.getName());
         tariff.setRatePerUnit(request.getRatePerUnit());
-        tariff.setEffectiveFrom(request.getEffectiveFrom());
+        tariff.setFixedCharge(request.getFixedCharge());
 
         return map(tariffRepository.save(tariff));
     }
 
-
-    public List<TariffResponse> getAll() {
-        return tariffRepository.findAll()
-                .stream()
-                .map(this::map)
-                .toList();
-    }
-
-
-    public TariffResponse getById(String tariffId) {
-        Tariff tariff = tariffRepository.findById(tariffId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Tariff not found"));
-
-        return map(tariff);
-    }
-
-
     public List<TariffResponse> getByUtility(String utilityId) {
 
-
         if (!utilityRepository.existsById(utilityId)) {
-            throw new ResourceNotFoundException(
-                    "Utility not found with id: " + utilityId);
+            throw new ResourceNotFoundException("Utility not found");
         }
 
         return tariffRepository.findByUtilityId(utilityId)
@@ -87,27 +63,44 @@ public class TariffService {
                 .toList();
     }
 
+    public TariffResponse getById(String tariffId) {
+        return tariffRepository.findById(tariffId)
+                .map(this::map)
+                .orElseThrow(() -> new ResourceNotFoundException("Tariff not found"));
+    }
 
-   
-
+    public void delete(String tariffId) {
+        Tariff tariff = tariffRepository.findById(tariffId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tariff not found"));
+        tariffRepository.delete(tariff);
+    }
 
     private TariffResponse map(Tariff tariff) {
         return TariffResponse.builder()
                 .id(tariff.getId())
                 .utilityId(tariff.getUtilityId())
-                .name(tariff.getName())
+                .tariffType(tariff.getTariffType())
                 .ratePerUnit(tariff.getRatePerUnit())
+                .fixedCharge(tariff.getFixedCharge())
                 .active(tariff.isActive())
                 .build();
     }
+    public List<TariffResponse> getAll() { 
+    	return tariffRepository.findAll() .stream() .map(this::map) .toList(); 
+    	}
+    
     public Double getRateByUtilityId(String utilityId) {
 
         Tariff tariff = tariffRepository
                 .findFirstByUtilityIdAndActiveTrue(utilityId)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Active tariff not found for utility"));
+                        new ResourceNotFoundException(
+                                "Active tariff not found for utility: " + utilityId
+                        )
+                );
 
         return tariff.getRatePerUnit();
     }
 
+    
 }

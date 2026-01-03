@@ -1,0 +1,113 @@
+.bills-page {
+  padding: 24px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.subtitle {
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+/* GRID */
+.bill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* CARD */
+.bill-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* HEADER */
+.bill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bill-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+/* STATUS */
+.status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status.generated {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.status.overdue {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.status.paid {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* BODY */
+.bill-body {
+  margin-top: 16px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: #475569;
+}
+
+.amount {
+  font-size: 18px;
+  color: #0f172a;
+}
+
+/* BUTTON */
+.pay-btn {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.pay-btn:hover {
+  background: #1d4ed8;
+}
+
+.paid-label {
+  margin-top: 16px;
+  text-align: center;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* STATES */
+.loading,
+.empty {
+  color: #64748b;
+  margin-top: 32px;
+}

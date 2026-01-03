@@ -1,24 +1,22 @@
 package com.chubb.utility.dto;
 
-import java.time.LocalDate;
-
-import jakarta.validation.constraints.NotBlank;
+import com.chubb.utility.models.TariffType;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 @Data
 public class CreateTariffRequest {
 
-    @NotBlank
+    @NotNull
     private String utilityId;
 
-    @NotBlank
-    private String name;
+    @NotNull
+    private TariffType tariffType;
 
-    @Positive
+    @PositiveOrZero
     private double ratePerUnit;
 
-    @NotNull
-    private LocalDate effectiveFrom;
+    @PositiveOrZero
+    private double fixedCharge;
 }

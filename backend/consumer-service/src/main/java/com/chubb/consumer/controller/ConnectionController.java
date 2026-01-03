@@ -44,5 +44,15 @@ public class ConnectionController {
             @PathVariable String connectionId) {
         return service.getById(connectionId);
     }
+    @PostMapping("/request")
+    @PreAuthorize("hasRole('CONSUMER')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void requestConnection(
+            @Valid @RequestBody ConnectionRequestDTO dto) {
+
+        service.requestConnection(dto);
+    }
+
+
 
 }

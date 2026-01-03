@@ -33,7 +33,7 @@ public class ConsumerController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','CONSUMER')")
+    @PreAuthorize("hasAnyRole('ADMIN','CONSUMER','BILLING_OFFICER')")
     public ResponseEntity<ConsumerResponseDTO> get(@PathVariable String id) {
         return ResponseEntity.ok(service.getById(id));
     }
@@ -43,6 +43,7 @@ public class ConsumerController {
     public ResponseEntity<List<ConsumerResponseDTO>> all() {
         return ResponseEntity.ok(service.getAll());
     }
+    
     @DeleteMapping("/{consumerId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable String consumerId) {

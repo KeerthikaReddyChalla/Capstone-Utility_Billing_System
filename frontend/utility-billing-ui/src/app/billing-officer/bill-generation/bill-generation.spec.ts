@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BillGeneration } from './bill-generation';
+import { BillGenerationComponent } from './bill-generation';
 
-describe('BillGeneration', () => {
-  let component: BillGeneration;
-  let fixture: ComponentFixture<BillGeneration>;
+describe('BillGenerationComponent', () => {
+  let component: BillGenerationComponent;
+  let fixture: ComponentFixture<BillGenerationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BillGeneration]
+      imports: [BillGenerationComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BillGeneration);
+    fixture = TestBed.createComponent(BillGenerationComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

@@ -1,23 +1,79 @@
-<h3>Tariffs</h3>
+<div class="tariff-container">
 
-<div class="card">
-  <select [(ngModel)]="newTariff.utilityId">
-    <option value="">Select Utility</option>
-    <option *ngFor="let u of utilities" [value]="u.id">{{u.name}}</option>
-  </select>
+  <h2>Tariff Management</h2>
+  <p class="subtitle">Manage utility tariffs and rates</p>
 
-  <input placeholder="Tariff Name" [(ngModel)]="newTariff.name">
-  <input type="number" placeholder="Rate" [(ngModel)]="newTariff.ratePerUnit">
-  <input type="date" [(ngModel)]="newTariff.effectiveFrom">
+  <!-- CREATE CARD -->
+  <div class="card">
+    <h3>Create New Tariff</h3>
 
-  <button (click)="create()">Add Tariff</button>
-</div>
+    <div class="grid">
+      <input placeholder="Utility ID" [(ngModel)]="tariffForm.utilityId">
+      <input placeholder="Tariff Name" [(ngModel)]="tariffForm.name">
+      <input type="number" placeholder="Rate / Unit" [(ngModel)]="tariffForm.ratePerUnit">
+      <input type="date" [(ngModel)]="tariffForm.effectiveFrom">
+    </div>
 
-<table>
-  <tr *ngFor="let t of tariffs">
-    <td>{{t.name}}</td>
-    <td>{{t.ratePerUnit}}</td>
-    <td>{{t.effectiveFrom}}</td>
-    <td><button class="danger" (click)="delete(t.id)">Delete</button></td>
+    <button class="primary-btn" (click)="createTariff()">Add Tariff</button>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card" *ngIf="tariffs.length > 0">
+    <h3>Existing Tariffs</h3>
+
+    <table>
+      <thead>
+  <tr>
+    <th>Name</th>
+    <th>Utility</th>
+    <th>Rate</th>
+    <th>Effective From</th>
+    <th>Actions</th>
   </tr>
-</table>
+</thead>
+
+      <tbody>
+        <tr *ngFor="let tariff of tariffs">
+          <td>{{ tariff.name }}</td>
+          <td>{{ tariff.utilityId }}</td>
+          <td>{{ tariff.ratePerUnit }}</td>
+          <td>
+  {{ tariff.effectiveFrom ? (tariff.effectiveFrom | date:'dd MMM yyyy') : '—' }}
+</td>
+
+
+          <td class="action-cell">
+  <button class="edit-btn" (click)="startEdit(tariff)">
+    Edit
+  </button>
+
+  <button
+    class="delete-btn"
+    (click)="deleteTariff(tariff.id)"
+  >
+    Delete
+  </button>
+</td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div class="modal" *ngIf="editingTariff">
+    <div class="modal-card">
+      <h3>Update Tariff</h3>
+
+      <input [(ngModel)]="editingTariff.name">
+      <input type="number" [(ngModel)]="editingTariff.ratePerUnit">
+      <input type="date" [(ngModel)]="editingTariff.effectiveFrom">
+
+      <div class="modal-actions">
+        <button class="secondary-btn" (click)="cancelEdit()">Cancel</button>
+        <button class="primary-btn" (click)="updateTariff()">Update</button>
+      </div>
+    </div>
+  </div>
+
+</div>

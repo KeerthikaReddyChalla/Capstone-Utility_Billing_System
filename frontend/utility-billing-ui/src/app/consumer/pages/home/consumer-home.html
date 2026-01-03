@@ -1,0 +1,30 @@
+<div class="home">
+
+  <header class="hero">
+    <h1>Welcome to UtilityBill</h1>
+    <p>Manage your utility connections and billing in one place</p>
+  </header>
+
+  <!-- TARIFF PLANS -->
+  <section class="tariffs">
+    <h2>Available Tariff Plans</h2>
+
+    <div class="tariff-grid">
+      <div class="tariff-card" *ngFor="let t of tariffs">
+        <h3>{{ t.title }}</h3>
+        <p class="desc">{{ t.desc }}</p>
+
+        <div class="price">{{ t.price }}</div>
+        <div class="fixed">{{ t.fixed }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <button class="primary-btn" (click)="createConnection()">
+      Create New Connection
+    </button>
+  </section>
+
+</div>

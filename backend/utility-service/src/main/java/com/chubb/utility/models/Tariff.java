@@ -1,12 +1,10 @@
 package com.chubb.utility.models;
 
-import java.time.LocalDate;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 @Document(collection = "tariffs")
@@ -19,16 +17,17 @@ public class Tariff {
     @Id
     private String id;
 
-    @NotBlank
+    @NotNull
     private String utilityId;
 
-    @NotBlank
-    private String name;
+    @NotNull
+    private TariffType tariffType;
 
-    @Positive
+    @PositiveOrZero
     private double ratePerUnit;
 
-    private LocalDate effectiveFrom;
+    @PositiveOrZero
+    private double fixedCharge;
 
     private boolean active;
 }

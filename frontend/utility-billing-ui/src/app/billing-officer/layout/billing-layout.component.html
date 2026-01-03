@@ -1,0 +1,45 @@
+<div class="layout">
+<aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+
+  <div class="sidebar-header">
+    <button class="hamburger" (click)="toggleSidebar()">☰</button>
+    <span class="logo-text" *ngIf="!sidebarCollapsed">UtilityBill</span>
+  </div>
+
+  <!-- NAV -->
+  <ul class="menu">
+    <li>
+      <a routerLink="/billing" routerLinkActive="active">
+        <span class="icon">📊</span>
+        <span class="text" *ngIf="!sidebarCollapsed">Dashboard</span>
+      </a>
+    </li>
+
+    <li>
+      <a routerLink="/billing/readings" routerLinkActive="active">
+        <span class="icon">🧮</span>
+        <span class="text" *ngIf="!sidebarCollapsed">Meter Readings</span>
+      </a>
+    </li>
+
+    <li>
+      <a routerLink="/billing/generate" routerLinkActive="active">
+        <span class="icon">🧾</span>
+        <span class="text" *ngIf="!sidebarCollapsed">Generate Bills</span>
+      </a>
+    </li>
+  </ul>
+
+  <!-- LOGOUT AT BOTTOM -->
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="logout()">
+      <span class="icon">⏻</span>
+      <span class="text" *ngIf="!sidebarCollapsed">Logout</span>
+    </button>
+  </div>
+
+</aside>
+<main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

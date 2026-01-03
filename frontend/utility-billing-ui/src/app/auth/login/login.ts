@@ -40,39 +40,48 @@ export class LoginComponent {
 
     this.authService.login(this.loginData).subscribe({
       next: (response) => {
+        // Save JWT + role extracted from token
         this.tokenService.saveToken(response.token);
+        this.tokenService.saveUserId(response.userId);
 
         const role = this.tokenService.getRole();
+        console.log('Logged in role:', role);
+
+        this.loading = false;
 
         if (role) {
           this.redirectByRole(role);
         } else {
           this.errorMessage = 'Unable to determine user role';
-          this.loading = false;
         }
       },
       error: () => {
-        this.errorMessage = 'Invalid email or password';
         this.loading = false;
+        this.errorMessage = 'Invalid email or password';
       }
     });
   }
 
-  private redirectByRole(role: string): void {
+  private redirectByRole(role: string | null): void {
     switch (role) {
       case 'ADMIN':
         this.router.navigate(['/admin']);
         break;
+
       case 'BILLING_OFFICER':
         this.router.navigate(['/billing']);
         break;
+
       case 'ACCOUNTS_OFFICER':
         this.router.navigate(['/accounts']);
         break;
+
       case 'CONSUMER':
         this.router.navigate(['/consumer']);
         break;
+
       default:
+        console.error('Unknown role:', role);
         this.router.navigate(['/login']);
     }
   }

@@ -22,4 +22,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(Map.of("error", "Validation failed"));
     }
+    @ExceptionHandler(ResourceConflictException.class)
+    public ResponseEntity<?> handleConflict(ResourceConflictException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(Map.of("error", ex.getMessage()));
+    }
+
 }

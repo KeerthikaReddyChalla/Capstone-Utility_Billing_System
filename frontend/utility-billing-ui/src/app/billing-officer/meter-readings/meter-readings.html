@@ -1,1 +1,74 @@
-<p>meter-readings works!</p>
+<h2>Meter Readings</h2>
+<p class="subtitle">Enter and manage monthly meter readings</p>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="card">
+    <span>Total Readings</span>
+    <h3>{{ stats.total }}</h3>
+  </div>
+  <div class="card warning">
+    <span>Pending</span>
+    <h3>{{ stats.pending }}</h3>
+  </div>
+  <div class="card success">
+    <span>Verified</span>
+    <h3>{{ stats.verified }}</h3>
+  </div>
+  <div class="card info">
+    <span>This Month</span>
+    <h3>{{ stats.month }}</h3>
+  </div>
+</div>
+
+<!-- FORM -->
+<div class="form">
+  <input placeholder="Connection ID"
+         [(ngModel)]="form.connectionId" />
+
+  <input type="number"
+         placeholder="Current Reading"
+         [(ngModel)]="form.currentReading" />
+
+  <button (click)="createReading()">+ New Reading</button>
+  <button class="secondary" (click)="loadReadings()">Load</button>
+</div>
+
+<!-- TABLE -->
+<div class="table-card">
+  <input class="search"
+         placeholder="Search by consumer..."
+         [(ngModel)]="search" />
+
+  <table>
+    <thead>
+      <tr>
+        <th>Consumer</th>
+        <th>Meter</th>
+        <th>Utility</th>
+        <th>Previous</th>
+        <th>Current</th>
+        <th>Consumption</th>
+        <th>Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let r of filteredReadings()">
+        <td>{{ r.consumerName }}</td>
+        <td>{{ r.meterNumber }}</td>
+        <td>{{ r.utilityName }}</td>
+        <td>{{ r.previousReading }}</td>
+        <td>{{ r.currentReading }}</td>
+        <td class="bold">{{ r.unitsConsumed }}</td>
+        <td>{{ r.readingDate | date }}</td>
+        <td>
+          <span class="badge" [ngClass]="r.status.toLowerCase()">
+            {{ r.status }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

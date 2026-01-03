@@ -21,4 +21,15 @@ export class AuthService {
   logout(): void {
     localStorage.clear();
   }
+  registerConsumer(payload: {
+  name: string;
+  email: string;
+  password: string;
+}) {
+  return this.http.post(
+    `${this.baseUrl}/auth/register`,
+    payload
+  );
+}
+
 }

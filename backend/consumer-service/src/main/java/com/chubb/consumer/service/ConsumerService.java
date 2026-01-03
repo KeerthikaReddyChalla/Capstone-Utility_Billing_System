@@ -1,5 +1,7 @@
 package com.chubb.consumer.service;
 
+import com.chubb.consumer.dto.AuthUserResponse;
+import com.chubb.consumer.dto.ConsumerApprovedEvent;
 import com.chubb.consumer.dto.ConsumerRequestDTO;
 import com.chubb.consumer.dto.ConsumerResponseDTO;
 import com.chubb.consumer.exception.ResourceNotFoundException;
@@ -8,7 +10,7 @@ import com.chubb.consumer.models.Consumer;
 import com.chubb.consumer.repository.ConsumerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import java.util.List;
 
 @Service
@@ -19,11 +21,25 @@ public class ConsumerService {
     private final AuthClient authClient;
 
     public ConsumerResponseDTO createConsumer(ConsumerRequestDTO dto) {
-        authClient.getUserById(dto.getUserId());
+
+
+        AuthUserResponse user = authClient.getUserById(dto.getUserId());
+
+        if (!"CONSUMER".equals(user.getRole())) {
+            throw new IllegalStateException("User is not a consumer");
+        }
+
+        if (!user.isActive()) {
+            throw new IllegalStateException("Consumer is not yet approved");
+        }
+
+        if (repository.existsById(user.getId())) {
+            throw new IllegalStateException("Consumer profile already exists");
+        }
 
         Consumer consumer = repository.save(
                 Consumer.builder()
-                        .userId(dto.getUserId())
+                        .id(user.getId()) 
                         .fullName(dto.getFullName())
                         .email(dto.getEmail())
                         .phone(dto.getPhone())
@@ -58,5 +74,21 @@ public class ConsumerService {
         }
         repository.deleteById(consumerId);
     }
+
+    public void handleConsumerApproved(ConsumerApprovedEvent event) {
+
+        if (repository.existsById(event.getUserId())) {
+            return; // idempotent
+        }
+
+        Consumer consumer = Consumer.builder()
+                .id(event.getUserId())
+                .fullName(event.getName())
+                .email(event.getEmail())
+                .build();
+
+        repository.save(consumer);
+    }
+
 
 }

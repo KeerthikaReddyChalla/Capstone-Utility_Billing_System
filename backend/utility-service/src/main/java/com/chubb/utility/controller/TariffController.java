@@ -63,5 +63,12 @@ public class TariffController {
     public Double getRate(@PathVariable String utilityId) {
         return service.getRateByUtilityId(utilityId);
     }
+    @DeleteMapping("/{tariffId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String tariffId) {
+        service.delete(tariffId);
+    }
+
     
 }

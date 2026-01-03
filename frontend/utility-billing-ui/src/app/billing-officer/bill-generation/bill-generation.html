@@ -1,1 +1,34 @@
-<p>bill-generation works!</p>
+<div class="page">
+
+  <h2>Generate Bill</h2>
+  <p class="subtitle">Generate utility bill for a consumer connection</p>
+
+  <div class="card">
+
+    <div class="form-group">
+      <label>Connection ID</label>
+      <input
+        type="text"
+        placeholder="Enter connection ID"
+        [(ngModel)]="billForm.connectionId"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Billing Cycle</label>
+      <input
+        type="date"
+        [(ngModel)]="billForm.billingCycle"
+      />
+    </div>
+
+    <button
+      class="primary-btn"
+      (click)="generate()"
+      [disabled]="loading"
+    >
+      {{ loading ? 'Generating...' : 'Generate Bill' }}
+    </button>
+
+  </div>
+</div>

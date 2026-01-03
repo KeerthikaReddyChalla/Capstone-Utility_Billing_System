@@ -30,6 +30,7 @@ public class UtilityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(req));
     }
 
+    @PreAuthorize("hasRole('CONSUMER')")
     @GetMapping
     public List<UtilityResponse> getAll() {
         return service.getAll();
@@ -45,6 +46,19 @@ public class UtilityController {
                                   @Valid @RequestBody UtilityRequest req) {
         return service.update(id, req);
     }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PreAuthorize("hasRole('CONSUMER')")
+    @GetMapping("/internal/{id}")
+    public UtilityResponse getInternal(@PathVariable String id) {
+        return service.getById(id);
+    }
+
     
 
 }

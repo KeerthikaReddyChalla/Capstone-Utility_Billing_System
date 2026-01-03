@@ -1,0 +1,54 @@
+<div class="bills-page">
+
+  <h1>Bills & Payments</h1>
+  <p class="subtitle">View and pay your utility bills</p>
+
+  <div *ngIf="loading" class="loading">
+    Loading your bills...
+  </div>
+
+  <div *ngIf="!loading && bills.length === 0" class="empty">
+    🎉 No bills to show
+  </div>
+
+  <div class="bill-grid" *ngIf="!loading && bills.length > 0">
+    <div class="bill-card" *ngFor="let bill of bills">
+
+      <div class="bill-header">
+        <h3>{{ bill.utilityName }}</h3>
+        <span class="status" [ngClass]="bill.status.toLowerCase()">
+          {{ bill.status }}
+        </span>
+      </div>
+
+      <div class="bill-body">
+        <div class="row">
+          <span>Billing Cycle</span>
+          <strong>{{ bill.billingCycle | date:'MMM yyyy' }}</strong>
+        </div>
+
+        <div class="row">
+          <span>Units Consumed</span>
+          <strong>{{ bill.unitsConsumed }}</strong>
+        </div>
+
+        <div class="row amount">
+          <span>Amount</span>
+          <strong>₹ {{ bill.amount }}</strong>
+        </div>
+      </div>
+
+      <button
+        class="pay-btn"
+        *ngIf="bill.status !== 'PAID'"
+        (click)="makePayment(bill)">
+        Make Payment
+      </button>
+
+      <div class="paid-label" *ngIf="bill.status === 'PAID'">
+        ✔ Paid
+      </div>
+    </div>
+  </div>
+
+</div>

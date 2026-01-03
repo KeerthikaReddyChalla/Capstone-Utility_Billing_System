@@ -11,53 +11,63 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
-
 @Configuration
 public class RabbitMQConfig {
 
+    // ---------- EXCHANGE ----------
     @Bean
     public TopicExchange exchange() {
         return new TopicExchange("utility.events.exchange");
     }
 
+    // ---------- QUEUES ----------
+    @Bean
+    public Queue authQueue() {
+        return new Queue("notification.auth.queue", true);
+    }
+
     @Bean
     public Queue billQueue() {
-        return new Queue("notification.bill.queue");
+        return new Queue("notification.bill.queue", true);
     }
 
     @Bean
     public Queue paymentQueue() {
-        return new Queue("notification.payment.queue");
+        return new Queue("notification.payment.queue", true);
     }
 
+    // ---------- BINDINGS ----------
     @Bean
-    public Queue authQueue() {
-        return new Queue("notification.auth.queue");
+    public Binding authBinding() {
+        return BindingBuilder
+                .bind(authQueue())
+                .to(exchange())
+                .with("auth.consumer.*");
     }
 
     @Bean
     public Binding billBinding() {
-        return BindingBuilder.bind(billQueue())
-                .to(exchange()).with("bill.*");
+        return BindingBuilder
+                .bind(billQueue())
+                .to(exchange())
+                .with("bill.*");
     }
 
     @Bean
     public Binding paymentBinding() {
-        return BindingBuilder.bind(paymentQueue())
-                .to(exchange()).with("payment.*");
+        return BindingBuilder
+                .bind(paymentQueue())
+                .to(exchange())
+                .with("payment.*");
     }
 
-    @Bean
-    public Binding authBinding() {
-        return BindingBuilder.bind(authQueue())
-                .to(exchange()).with("auth.*");
-    }
+    // ---------- MESSAGE CONVERTER ----------
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
+    // ---------- RABBIT TEMPLATE ----------
     @Bean
     public RabbitTemplate rabbitTemplate(
             ConnectionFactory connectionFactory,
@@ -68,4 +78,3 @@ public class RabbitMQConfig {
         return template;
     }
 }
-
