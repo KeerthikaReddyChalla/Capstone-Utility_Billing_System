@@ -2,34 +2,25 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { NavbarComponent } from '../../shared/components/navbar/navbar';
-import { UtilitiesComponent } from '../components/utilities/utilities';
-import { TariffsComponent } from '../components/tariffs/tariffs';
-
 import { AdminService } from '../services/admin.service';
 import { PendingUser } from '../models/pending-user.model';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatSnackBarModule,
-    NavbarComponent,
-    UtilitiesComponent,
-    TariffsComponent
-  ],
+  imports: [CommonModule, MatSnackBarModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
 export class AdminDashboardComponent {
 
-  /* ---------- TAB STATE ---------- */
-  activeTab: 'approvals' | 'utilities' | 'tariffs' = 'approvals';
-
-  /* ---------- APPROVAL STATE ---------- */
   pendingUsers: PendingUser[] = [];
   loading = false;
+
+  /* CONFIRM DIALOG */
+  showConfirmDialog = false;
+  selectedUser: PendingUser | null = null;
+  action: 'APPROVE' | 'DISAPPROVE' | null = null;
 
   constructor(
     private adminService: AdminService,
@@ -37,7 +28,6 @@ export class AdminDashboardComponent {
     private cdr: ChangeDetectorRef
   ) {}
 
-  /* ---------- LOAD PENDING USERS ---------- */
   openApprovals(): void {
     this.loading = true;
     this.pendingUsers = [];
@@ -49,74 +39,65 @@ export class AdminDashboardComponent {
         this.cdr.detectChanges();
 
         if (users.length === 0) {
-          this.snackBar.open(
-            'No pending users to approve',
-            'OK',
-            { duration: 3000 }
-          );
+          this.showToast('No pending users to approve', 'success');
         }
       },
       error: () => {
         this.loading = false;
-        this.cdr.detectChanges();
-        this.snackBar.open(
-          'Failed to load pending users',
-          'Close',
-          { duration: 3000 }
-        );
+        this.showToast('Failed to load pending users', 'error');
       }
     });
   }
 
-  /* ---------- APPROVE USER ---------- */
-  approveUser(userId: string): void {
-    this.adminService.approveUser(userId).subscribe({
-      next: () => {
-        this.pendingUsers = this.pendingUsers.filter(
-          user => user.id !== userId
-        );
+  openConfirm(user: PendingUser, action: 'APPROVE' | 'DISAPPROVE') {
+    this.selectedUser = user;
+    this.action = action;
+    this.showConfirmDialog = true;
+  }
 
+  closeConfirm() {
+    this.showConfirmDialog = false;
+    this.selectedUser = null;
+    this.action = null;
+  }
+
+  confirmAction(): void {
+    if (!this.selectedUser || !this.action) return;
+
+    const id = this.selectedUser.id;
+
+    const obs =
+      this.action === 'APPROVE'
+        ? this.adminService.approveUser(id)
+        : this.adminService.deleteUser(id);
+
+    obs.subscribe({
+      next: () => {
+        this.pendingUsers = this.pendingUsers.filter(u => u.id !== id);
         this.cdr.detectChanges();
 
-        this.snackBar.open(
-          'User approved successfully',
-          'OK',
-          { duration: 3000 }
+        this.showToast(
+          `User ${this.action === 'APPROVE' ? 'approved' : 'disapproved'} successfully`,
+          'success'
         );
+
+        this.closeConfirm();
       },
       error: () => {
-        this.snackBar.open(
-          'Failed to approve user',
-          'Close',
-          { duration: 3000 }
-        );
+        this.showToast('Action failed', 'error');
+        this.closeConfirm();
       }
     });
   }
 
-  /* ---------- DISAPPROVE (DELETE) USER ---------- */
-  disapproveUser(userId: string): void {
-    this.adminService.deleteUser(userId).subscribe({
-      next: () => {
-        this.pendingUsers = this.pendingUsers.filter(
-          user => user.id !== userId
-        );
-
-        this.cdr.detectChanges();
-
-        this.snackBar.open(
-          'User disapproved and deleted',
-          'OK',
-          { duration: 3000 }
-        );
-      },
-      error: () => {
-        this.snackBar.open(
-          'Failed to disapprove user',
-          'Close',
-          { duration: 3000 }
-        );
-      }
+  private showToast(message: string, type: 'success' | 'error'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom',
+      panelClass: type === 'success'
+        ? ['toast-success']
+        : ['toast-error']
     });
   }
 }

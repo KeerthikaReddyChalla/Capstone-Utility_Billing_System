@@ -1,0 +1,77 @@
+<div class="approval-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h2>Connection Requests</h2>
+    <p>Review and approve consumer connection requests</p>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="info">Loading requests...</div>
+
+  <!-- EMPTY -->
+  <div *ngIf="!loading && requests.length === 0" class="empty">
+    No pending connection requests
+  </div>
+
+  <!-- REQUEST CARDS -->
+  <div class="request-grid" *ngIf="!loading && requests.length > 0">
+    <div class="request-card" *ngFor="let r of requests">
+
+      <div class="card-header">
+        <span class="badge">PENDING</span>
+        <span class="date">{{ r.requestedAt | date:'medium' }}</span>
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <span class="label">Consumer ID</span>
+          <span class="value mono">{{ r.consumerId }}</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Utility</span>
+          <span class="value">{{ r.utilityId }}</span>
+        </div>
+
+        <div class="row">
+          <span class="label">Tariff</span>
+          <span class="value">{{ r.tariffType }}</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button class="approve"
+                (click)="openConfirm(r, 'APPROVE')">
+          Approve
+        </button>
+
+        <button class="reject"
+                (click)="openConfirm(r, 'REJECT')">
+          Reject
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div class="confirm-overlay" *ngIf="showConfirmDialog">
+  <div class="confirm-box">
+
+    <h3>Confirm Action</h3>
+    <p>
+      Are you sure you want to
+      <strong>{{ action }}</strong>
+      this connection request?
+    </p>
+
+    <div class="confirm-actions">
+      <button class="danger" (click)="confirmAction()">Yes</button>
+      <button class="cancel" (click)="closeConfirm()">Cancel</button>
+    </div>
+
+  </div>
+</div>

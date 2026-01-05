@@ -1,1 +1,88 @@
-<p>users works!</p>
+<div class="users-page">
+
+  <!-- HEADER -->
+  <div class="users-header">
+    <div>
+      <h2>Users</h2>
+      <p>Manage user accounts</p>
+    </div>
+
+  </div>
+
+  <!-- SEARCH + FILTER -->
+  <div class="search-row">
+    <div class="search-box">
+      🔍
+      <input
+        type="text"
+        placeholder="Search by name, email, or ID..."
+        [(ngModel)]="search"
+        (input)="applyFilters()"
+      />
+    </div>
+
+    <select [(ngModel)]="roleFilter" (change)="applyFilters()">
+      <option value="ALL">All Roles</option>
+      <option value="CONSUMER">Consumer</option>
+      <option value="BILLING_OFFICER">Billing Officer</option>
+      <option value="ACCOUNTS_OFFICER">Accounts Officer</option>
+    </select>
+  </div>
+
+  <!-- LOADING -->
+  <p *ngIf="loading" class="info">Loading users...</p>
+
+  <!-- USERS GRID -->
+  <div class="users-grid" *ngIf="!loading && filteredUsers.length">
+
+    <div class="user-card" *ngFor="let user of filteredUsers">
+
+      <div class="card-top">
+        <div class="avatar">
+          {{ user.name.charAt(0).toUpperCase() }}
+        </div>
+
+        <button
+          class="more-btn"
+          *ngIf="user.role !== 'ADMIN'"
+          (click)="openDeleteConfirm(user)">
+          ⋮
+        </button>
+      </div>
+
+      <h4>{{ user.name }}</h4>
+      <p class="email">{{ user.email }}</p>
+      <p class="id">Id: {{ user.id }}</p>
+      <div class="tags">
+        <span class="role">{{ user.role }}</span>
+        <span class="status" [class.active]="user.active">
+          {{ user.active ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EMPTY -->
+  <p *ngIf="!loading && !filteredUsers.length" class="info">
+    No users found
+  </p>
+
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div class="confirm-overlay" *ngIf="showConfirmDialog">
+  <div class="confirm-box">
+    <h3>Delete User</h3>
+    <p>
+      Are you sure you want to delete
+      <strong>{{ selectedUser?.name }}</strong>?
+      This action cannot be undone.
+    </p>
+
+    <div class="actions">
+      <button class="btn cancel" (click)="closeConfirm()">Cancel</button>
+      <button class="btn danger" (click)="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>

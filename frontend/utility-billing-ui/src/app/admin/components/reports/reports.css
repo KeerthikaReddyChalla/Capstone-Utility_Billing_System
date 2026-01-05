@@ -1,0 +1,92 @@
+.reports-page {
+  padding: 32px;
+  background: #f6f9f8;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.reports-header {
+  margin-bottom: 28px;
+}
+
+.reports-header h2 {
+  margin: 0;
+  font-size: 26px;
+  color: #134c47;
+}
+
+.reports-header p {
+  margin-top: 6px;
+  color: #64748b;
+}
+
+/* KPI GRID */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.kpi-card {
+  background: white;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.06);
+}
+
+.kpi-label {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.kpi-value {
+  margin-top: 8px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #134c47;
+}
+
+.kpi-card.warn .kpi-value {
+  color: #dc2626;
+}
+
+.kpi-card.success .kpi-value {
+  color: #16a34a;
+}
+
+/* CHARTS */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 22px;
+}
+
+.chart-card {
+  background: white;
+  border-radius: 18px;
+  padding: 55px;
+  height: 360px;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.07);
+}
+
+.chart-card.full {
+  grid-column: span 2;
+}
+
+.chart-card h3 {
+  font-size: 16px;
+  margin-bottom: 14px;
+  color: #134c47;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .reports-page {
+    padding: 20px;
+  }
+
+  .chart-card.full {
+    grid-column: span 1;
+  }
+}

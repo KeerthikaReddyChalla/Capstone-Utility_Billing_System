@@ -24,6 +24,10 @@ export class UtilitiesComponent implements OnInit {
     description: ''
   };
 
+  /* CONFIRM MODAL */
+  showConfirm = false;
+  selectedUtility: UtilityResponse | null = null;
+
   constructor(
     private utilityService: AdminUtilityService,
     private snackBar: MatSnackBar,
@@ -34,7 +38,6 @@ export class UtilitiesComponent implements OnInit {
     this.loadUtilities();
   }
 
-  /* ---------- LOAD UTILITIES ---------- */
   loadUtilities(): void {
     this.loading = true;
 
@@ -42,72 +45,71 @@ export class UtilitiesComponent implements OnInit {
       next: (data) => {
         this.utilities = data;
         this.loading = false;
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
-        this.cdr.detectChanges();
-        this.snackBar.open(
-          'Failed to load utilities',
-          'Close',
-          { duration: 3000 }
-        );
+        this.showToast('Failed to load utilities', 'error');
       }
     });
   }
 
-  /* ---------- CREATE UTILITY ---------- */
   createUtility(): void {
     if (!this.utilityForm.name.trim()) {
-      this.snackBar.open('Utility name is required', 'Close', { duration: 3000 });
+      this.showToast('Utility name is required', 'error');
       return;
     }
 
     this.utilityService.createUtility(this.utilityForm).subscribe({
       next: (created) => {
-
         this.utilities.unshift(created);
-        this.cdr.detectChanges();
-
-        this.snackBar.open(
-          'Utility created successfully',
-          'OK',
-          { duration: 3000 }
-        );
-
-        // reset form
         this.utilityForm = { name: '', description: '' };
+        this.cdr.detectChanges();
+        this.showToast('Utility created successfully', 'success');
       },
       error: () => {
-        this.snackBar.open(
-          'Failed to create utility',
-          'Close',
-          { duration: 3000 }
-        );
+        this.showToast('Failed to create utility', 'error');
       }
     });
   }
-  deleteUtility(id: string): void {
-  this.utilityService.deleteUtility(id).subscribe({
-    next: () => {
 
-      this.utilities = this.utilities.filter(u => u.id !== id);
-      this.cdr.detectChanges();
+  openDeleteConfirm(utility: UtilityResponse): void {
+    this.selectedUtility = utility;
+    this.showConfirm = true;
+  }
 
-      this.snackBar.open(
-        'Utility deleted successfully',
-        'OK',
-        { duration: 3000 }
-      );
-    },
-    error: () => {
-      this.snackBar.open(
-        'Failed to delete utility',
-        'Close',
-        { duration: 3000 }
-      );
-    }
-  });
-}
+  closeConfirm(): void {
+    this.showConfirm = false;
+    this.selectedUtility = null;
+  }
 
+  confirmDelete(): void {
+    if (!this.selectedUtility) return;
+
+    this.utilityService.deleteUtility(this.selectedUtility.id).subscribe({
+      next: () => {
+        this.utilities = this.utilities.filter(
+          u => u.id !== this.selectedUtility!.id
+        );
+        this.cdr.detectChanges();
+        this.showToast('Utility deleted successfully', 'success');
+        this.closeConfirm();
+      },
+      error: () => {
+        this.showToast('Failed to delete utility', 'error');
+        this.closeConfirm();
+      }
+    });
+  }
+
+  private showToast(message: string, type: 'success' | 'error'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom',
+      panelClass: type === 'success'
+        ? ['toast-success']
+        : ['toast-error']
+    });
+  }
 }

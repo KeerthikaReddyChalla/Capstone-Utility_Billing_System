@@ -1,25 +1,24 @@
-<div class="utilities-container">
+<div class="utilities-page">
 
-  <h2>Utilities Management</h2>
+  <div class="header">
+    <h2>Utilities</h2>
+    <p>Manage available utility services in the system</p>
+  </div>
 
-  <!-- CREATE FORM -->
-  <div class="card form-card">
+  <!-- CREATE -->
+  <div class="create-card">
     <h3>Add New Utility</h3>
 
-    <div class="form-group">
-      <input
-        type="text"
-        placeholder="Utility Name"
-        [(ngModel)]="utilityForm.name"
-      />
-    </div>
+    <input
+      type="text"
+      placeholder="Utility name"
+      [(ngModel)]="utilityForm.name"
+    />
 
-    <div class="form-group">
-      <textarea
-        placeholder="Description (optional)"
-        [(ngModel)]="utilityForm.description"
-      ></textarea>
-    </div>
+    <textarea
+      placeholder="Short description (optional)"
+      [(ngModel)]="utilityForm.description"
+    ></textarea>
 
     <button class="primary-btn" (click)="createUtility()">
       Add Utility
@@ -30,40 +29,44 @@
   <p *ngIf="loading" class="info">Loading utilities...</p>
 
   <!-- LIST -->
-  <div class="card table-card" *ngIf="!loading && utilities.length > 0">
-    <h3>Existing Utilities</h3>
+  <div class="utility-grid" *ngIf="!loading && utilities.length > 0">
+    <div class="utility-card" *ngFor="let u of utilities">
 
-    <table>
-      <thead>
-  <tr>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Actions</th>
-  </tr>
-</thead>
+      <div class="card-top">
+        <span class="icon"></span>
+        <button class="delete"
+                (click)="openDeleteConfirm(u)">
+          ✕
+        </button>
+      </div>
 
+      <h4>{{ u.name }}</h4>
+      <p>{{ u.description || 'No description provided' }}</p>
 
-      <tbody>
-        <tr *ngFor="let utility of utilities">
-  <td>{{ utility.name }}</td>
-  <td>{{ utility.description || '—' }}</td>
-  <td>
-    <button
-      class="delete-btn"
-      (click)="deleteUtility(utility.id)"
-    >
-      Delete
-    </button>
-  </td>
-</tr>
-
-      </tbody>
-    </table>
+    </div>
   </div>
 
-  <!-- EMPTY STATE -->
-  <p *ngIf="!loading && utilities.length === 0" class="info">
+  <!-- EMPTY -->
+  <p *ngIf="!loading && utilities.length === 0" class="empty">
     No utilities created yet
   </p>
 
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="confirm-overlay" *ngIf="showConfirm">
+  <div class="confirm-box">
+
+    <h3>Delete Utility</h3>
+    <p>
+      Are you sure you want to delete
+      <strong>{{ selectedUtility?.name }}</strong>?
+    </p>
+
+    <div class="confirm-actions">
+      <button class="danger" (click)="confirmDelete()">Delete</button>
+      <button class="cancel" (click)="closeConfirm()">Cancel</button>
+    </div>
+
+  </div>
 </div>

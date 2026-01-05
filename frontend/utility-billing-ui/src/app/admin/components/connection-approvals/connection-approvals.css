@@ -1,3 +1,4 @@
+/* ===== PAGE ===== */
 .approval-page {
   max-width: 1200px;
   margin: auto;
@@ -16,17 +17,7 @@
 
 .page-header p {
   color: #64748b;
-  margin: 6px 0 12px;
-}
-
-.load-btn {
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
-  background: #134c47;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
+  margin-top: 4px;
 }
 
 /* STATES */
@@ -38,66 +29,70 @@
 }
 
 /* GRID */
-.user-grid {
+.request-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
 }
 
 /* CARD */
-.user-card {
-  background: #fff;
+.request-card {
+  background: #ffffff;
   border-radius: 18px;
   padding: 20px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.06);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.user-card:hover {
+.request-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 18px 40px rgba(0,0,0,0.1);
 }
 
-/* HEADER */
+/* CARD HEADER */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #134c47;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-}
-
 .badge {
-  font-size: 12px;
   background: #fef3c7;
   color: #92400e;
+  font-size: 12px;
   padding: 4px 10px;
   border-radius: 999px;
+  font-weight: 600;
+}
+
+.date {
+  font-size: 12px;
+  color: #64748b;
 }
 
 /* BODY */
 .card-body {
-  margin-top: 14px;
+  margin-top: 16px;
 }
 
-.card-body h4 {
-  margin: 0;
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
-.card-body p {
-  margin: 4px 0 0;
-  font-size: 14px;
+.label {
+  font-size: 13px;
   color: #64748b;
+}
+
+.value {
+  font-weight: 500;
+}
+
+.mono {
+  font-family: monospace;
+  font-size: 13px;
 }
 
 /* ACTIONS */
@@ -126,7 +121,7 @@
   color: #fff;
 }
 
-/* CONFIRM MODAL */
+/* ===== CONFIRM MODAL ===== */
 .confirm-overlay {
   position: fixed;
   inset: 0;
@@ -138,7 +133,7 @@
 }
 
 .confirm-box {
-  background: #fff;
+  background: #ffffff;
   padding: 26px;
   border-radius: 18px;
   width: 340px;
@@ -163,18 +158,27 @@
   margin-top: 20px;
 }
 
-.confirm-actions .danger {
-  background: #dc2626;
-  color: #fff;
+.confirm-actions button {
   padding: 10px 18px;
   border-radius: 10px;
   border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.confirm-actions .danger {
+  background: #dc2626;
+  color: #fff;
 }
 
 .confirm-actions .cancel {
   background: #e5e7eb;
   color: #111827;
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .page-header h2 {
+    font-size: 22px;
+  }
 }

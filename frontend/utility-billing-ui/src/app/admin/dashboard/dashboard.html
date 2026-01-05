@@ -1,66 +1,70 @@
-<app-navbar></app-navbar>
+<div class="approval-page">
 
-<div class="admin-container">
+  <div class="page-header">
+    <h2>User Approval Requests</h2>
+    <p>Approve or reject newly registered users</p>
 
-  <!-- TAB NAV -->
-  <div class="admin-tabs">
-    <button (click)="activeTab='approvals'" [class.active]="activeTab==='approvals'">
-      Approvals
-    </button>
-    <button (click)="activeTab='utilities'" [class.active]="activeTab==='utilities'">
-      Utilities
-    </button>
-    <button (click)="activeTab='tariffs'" [class.active]="activeTab==='tariffs'">
-      Tariffs
-    </button>
-  </div>
-
-  <!-- APPROVALS TAB (INLINE) -->
-  <div *ngIf="activeTab==='approvals'">
-
-    <h3>Pending User Approvals</h3>
-
-    <button class="tab-btn" (click)="openApprovals()">
+    <button class="load-btn" (click)="openApprovals()">
       Load Pending Users
     </button>
-
-    <p *ngIf="loading" class="info">Loading pending users...</p>
-
-    <table *ngIf="!loading && pendingUsers.length > 0">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr *ngFor="let user of pendingUsers">
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td class="action-cell">
-            <button class="approve-btn" (click)="approveUser(user.id)">
-              Approve
-            </button>
-            <button class="disapprove-btn" (click)="disapproveUser(user.id)">
-              Disapprove
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <p *ngIf="!loading && pendingUsers.length === 0" class="info">
-      No pending users to approve
-    </p>
-
   </div>
 
-  <!-- UTILITIES TAB -->
-  <app-utilities *ngIf="activeTab==='utilities'"></app-utilities>
+  <div *ngIf="loading" class="info">
+    Loading pending users...
+  </div>
 
-  <!-- TARIFFS TAB -->
-  <app-tariffs *ngIf="activeTab==='tariffs'"></app-tariffs>
+  <div *ngIf="!loading && pendingUsers.length === 0" class="empty">
+    No pending users
+  </div>
 
+  <div class="user-grid" *ngIf="!loading && pendingUsers.length > 0">
+
+    <div class="user-card" *ngFor="let user of pendingUsers">
+
+      <div class="card-header">
+        <span class="avatar">
+          {{ user.name.charAt(0) | uppercase }}
+        </span>
+        <span class="badge">PENDING</span>
+      </div>
+
+      <div class="card-body">
+        <h4>{{ user.name }}</h4>
+        <p>{{ user.email }}</p>
+      </div>
+
+      <div class="card-actions">
+        <button class="approve"
+                (click)="openConfirm(user, 'APPROVE')">
+          Approve
+        </button>
+
+        <button class="reject"
+                (click)="openConfirm(user, 'DISAPPROVE')">
+          Disapprove
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="confirm-overlay" *ngIf="showConfirmDialog">
+  <div class="confirm-box">
+
+    <h3>Confirm Action</h3>
+    <p>
+      Are you sure you want to
+      <strong>{{ action }}</strong>
+      this user?
+    </p>
+
+    <div class="confirm-actions">
+      <button class="danger" (click)="confirmAction()">Yes</button>
+      <button class="cancel" (click)="closeConfirm()">Cancel</button>
+    </div>
+
+  </div>
 </div>
