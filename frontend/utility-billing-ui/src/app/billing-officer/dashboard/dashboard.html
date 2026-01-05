@@ -1,74 +1,98 @@
-<div class="page">
+<div class="analytics-page">
 
-  <h2>Bills & Analytics</h2>
-  <p class="subtitle">Billing officer operational dashboard</p>
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h2>Bills & Analytics</h2>
+      <p class="subtitle">
+        Billing officer operational dashboard
+      </p>
+    </div>
+  </div>
 
   <!-- STATS -->
-  <div class="stats">
-    <div class="card">
+  <div class="stats-grid">
+    <div class="stat-card">
       <span>Total Bills</span>
-      <strong>{{ stats.totalBills }}</strong>
+      <h3>{{ stats.totalBills }}</h3>
     </div>
-    <div class="card">
+
+    <div class="stat-card warn">
       <span>Pending</span>
-      <strong>{{ stats.pending }}</strong>
+      <h3>{{ stats.pending }}</h3>
     </div>
-    <div class="card">
+
+    <div class="stat-card danger">
       <span>Overdue</span>
-      <strong>{{ stats.overdue }}</strong>
+      <h3>{{ stats.overdue }}</h3>
     </div>
-    <div class="card">
+
+    <div class="stat-card success">
       <span>Total Consumption</span>
-      <strong>{{ stats.totalConsumption }} units</strong>
+      <h3>{{ stats.totalConsumption }} <small>units</small></h3>
     </div>
   </div>
 
   <!-- CHARTS -->
-  <div class="charts">
-    <div class="chart-card">
-      <h4>Consumption Trend</h4>
+  <div class="charts-grid">
+
+  <div class="chart-card wide">
+    <h4>Consumption Trend</h4>
+
+    <div class="chart-wrapper">
       <canvas id="consumptionChart"></canvas>
     </div>
+  </div>
 
-    <div class="chart-card">
-      <h4>Utility-wise Consumption</h4>
+  <div class="chart-card wide">
+    <h4>Utility-wise Consumption</h4>
+
+    <div class="chart-wrapper">
       <canvas id="utilityChart"></canvas>
     </div>
   </div>
+
+</div>
+
 
   <!-- BILLS TABLE -->
   <div class="table-card">
     <h4>Generated Bills</h4>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Bill ID</th>
-          <th>Consumer</th>
-          <th>Utility</th>
-          <th>Units</th>
-          <th>Amount</th>
-          <th>Cycle</th>
-          <th>Status</th>
-        </tr>
-      </thead>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Bill ID</th>
+            <th>Consumer</th>
+            <th>Utility</th>
+            <th>Units</th>
+            <th>Amount</th>
+            <th>Cycle</th>
+            <th>Status</th>
+          </tr>
+        </thead>
 
-      <tbody>
-        <tr *ngFor="let bill of bills">
-          <td>{{ bill.id | slice:0:8 }}</td>
-          <td>{{ bill.consumerName }}</td>
-          <td>{{ bill.utilityName }}</td>
-          <td>{{ bill.unitsConsumed }}</td>
-          <td>₹ {{ bill.amount }}</td>
-          <td>{{ bill.billingCycle | date:'MMM yyyy' }}</td>
-          <td>
-            <span class="badge" [ngClass]="bill.status.toLowerCase()">
-              {{ bill.status }}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <tbody>
+          <tr *ngFor="let bill of bills">
+            <td class="mono">{{ bill.id | slice:0:8 }}</td>
+            <td>{{ bill.consumerName }}</td>
+            <td>{{ bill.utilityName }}</td>
+            <td>{{ bill.unitsConsumed }}</td>
+            <td class="amount">₹ {{ bill.amount }}</td>
+            <td>{{ bill.billingCycle | date:'MMM yyyy' }}</td>
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="bill.status.toLowerCase()"
+              >
+                {{ bill.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
   </div>
 

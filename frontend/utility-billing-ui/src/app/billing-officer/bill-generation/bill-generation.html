@@ -1,9 +1,19 @@
-<div class="page">
+<div class="bill-page">
 
-  <h2>Generate Bill</h2>
-  <p class="subtitle">Generate utility bill for a consumer connection</p>
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h2>Generate Bill</h2>
+      <p class="subtitle">
+        Generate utility bill for a consumer connection
+      </p>
+    </div>
+  </div>
 
-  <div class="card">
+  <!-- FORM CARD -->
+  <div class="card bill-card">
+
+    <h3>Billing Details</h3>
 
     <div class="form-group">
       <label>Connection ID</label>
@@ -27,8 +37,9 @@
       (click)="generate()"
       [disabled]="loading"
     >
-      {{ loading ? 'Generating...' : 'Generate Bill' }}
+      {{ loading ? 'Generating Bill...' : 'Generate Bill' }}
     </button>
 
   </div>
+
 </div>

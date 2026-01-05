@@ -29,7 +29,7 @@ export class BillGenerationComponent {
 
   generate(): void {
     if (!this.billForm.connectionId || !this.billForm.billingCycle) {
-      this.snackBar.open('All fields are required', 'Close', { duration: 3000 });
+      this.showToast('All fields are required', 'error');
       return;
     }
 
@@ -38,9 +38,7 @@ export class BillGenerationComponent {
     this.billingService.generateBill(this.billForm).subscribe({
       next: () => {
         this.loading = false;
-        this.snackBar.open('Bill generated successfully', 'OK', {
-          duration: 3000
-        });
+        this.showToast('Bill generated successfully', 'success');
 
         this.billForm = {
           connectionId: '',
@@ -51,10 +49,19 @@ export class BillGenerationComponent {
       },
       error: () => {
         this.loading = false;
-        this.snackBar.open('Failed to generate bill', 'Close', {
-          duration: 3000
-        });
+        this.showToast('Failed to generate bill', 'error');
       }
+    });
+  }
+   /* ---------- TOAST ---------- */
+  private showToast(message: string, type: 'success' | 'error'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom',
+      panelClass: type === 'success'
+        ? ['toast-success']
+        : ['toast-error']
     });
   }
 }

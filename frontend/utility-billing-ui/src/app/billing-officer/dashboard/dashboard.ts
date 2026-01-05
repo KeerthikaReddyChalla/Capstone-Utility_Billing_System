@@ -87,9 +87,14 @@ export class BillingDashboardComponent implements OnInit, AfterViewInit {
         labels: Object.keys(utilityMap),
         datasets: [{
           data: Object.values(utilityMap),
-          backgroundColor: ['#ecc94b', '#4299e1', '#ed8936', '#9f7aea']
+          backgroundColor: ['#0f5625ff', '#4299e1', '#ed8936', '#9f7aea']
         }]
-      }
+      },
+      options: {
+  responsive: true,
+  maintainAspectRatio: false
+}
+
     });
   }
 }

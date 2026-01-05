@@ -12,7 +12,19 @@ export class MeterReadingService {
 
   constructor(private http: HttpClient) {}
 
-  createReading(payload: MeterReadingRequest): Observable<MeterReadingResponse> {
+
+  createReading(data: MeterReadingRequest): Observable<MeterReadingResponse> {
+
+    const payload = {
+      connectionId: data.connectionId,
+      consumerId: data.consumerId,
+      utilityId: data.utilityId,
+      readingValue: data.readingValue,
+
+  
+      readingDate: new Date(data.readingDate).toISOString().split('T')[0]
+    };
+
     return this.http.post<MeterReadingResponse>(
       `${this.baseUrl}/meter-readings`,
       payload

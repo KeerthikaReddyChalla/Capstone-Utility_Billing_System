@@ -6,6 +6,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MeterReadingService } from '../services/meter-reading.service';
 import { MeterReadingRequest } from '../models/meter-reading-request.model';
 import { MeterReadingResponse } from '../models/meter-reading-response.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-meter-readings',
@@ -17,33 +20,53 @@ import { MeterReadingResponse } from '../models/meter-reading-response.model';
 export class MeterReadingsComponent implements OnInit {
 
   readings: MeterReadingResponse[] = [];
+  connectionsWithoutReadings: any[] = [];
+
   loading = false;
+  search = '';
 
   stats = {
     total: 0,
-    pending: 0,
-    verified: 0,
-    month: new Date().toLocaleString('default', { month: 'short', year: 'numeric' })
+    month: new Date().toLocaleString('default', {
+      month: 'short',
+      year: 'numeric'
+    })
   };
-
-  search = '';
 
   form: MeterReadingRequest = {
     connectionId: '',
-    currentReading: 0,
-    readingDate: new Date().toISOString()
+    consumerId: '',
+    utilityId: '',
+    readingValue: 0,
+    readingDate: new Date()
   };
+
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private service: MeterReadingService,
+    private http: HttpClient,
     private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.form.connectionId = params['connectionId'] || '';
+      this.form.consumerId   = params['consumerId'] || '';
+      this.form.utilityId    = params['utilityId'] || '';
+    });
+  }
 
+  // ===============================
+  // LOAD READINGS
+  // ===============================
   loadReadings(): void {
-    if (!this.form.connectionId) return;
+    if (!this.form.connectionId) {
+      this.showToast('Enter connection ID', 'error');
+      return;
+    }
 
     this.loading = true;
 
@@ -56,35 +79,90 @@ export class MeterReadingsComponent implements OnInit {
       },
       error: () => {
         this.loading = false;
-        this.snackBar.open('Failed to load readings', 'Close', { duration: 3000 });
+        this.showToast('Failed to load meter readings', 'error');
       }
     });
   }
 
+  // ===============================
+  // CREATE READING
+  // ===============================
   createReading(): void {
+
+    if (
+      !this.form.connectionId ||
+      !this.form.consumerId ||
+      !this.form.utilityId ||
+      this.form.readingValue <= 0
+    ) {
+      this.showToast('Please fill all required fields', 'error');
+      return;
+    }
+
     this.service.createReading(this.form).subscribe({
       next: (created) => {
         this.readings.unshift(created);
         this.calculateStats();
         this.cdr.detectChanges();
 
-        this.snackBar.open('Meter reading added', 'OK', { duration: 3000 });
+        this.showToast('Meter reading added successfully', 'success');
+
+        this.form.readingValue = 0;
+        this.form.readingDate = new Date();
       },
       error: () => {
-        this.snackBar.open('Failed to add reading', 'Close', { duration: 3000 });
+        this.showToast('Failed to add meter reading', 'error');
       }
     });
   }
 
+
   calculateStats(): void {
     this.stats.total = this.readings.length;
-    this.stats.pending = this.readings.filter(r => r.status === 'PENDING').length;
-    this.stats.verified = this.readings.filter(r => r.status === 'VERIFIED').length;
   }
 
   filteredReadings(): MeterReadingResponse[] {
+    if (!this.search.trim()) return this.readings;
+
+    const q = this.search.toLowerCase();
     return this.readings.filter(r =>
-      r.consumerName.toLowerCase().includes(this.search.toLowerCase())
+      r.connectionId.toLowerCase().includes(q)
     );
   }
+
+
+  loadConnectionsWithoutReadings(): void {
+
+    this.http.get<any[]>(`${this.apiUrl}/connections`).subscribe({
+      next: (connections) => {
+
+        const readingConnectionIds =
+          this.readings.map(r => r.connectionId);
+
+        this.connectionsWithoutReadings =
+          connections.filter(c =>
+            !readingConnectionIds.includes(c.id)
+          );
+
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.showToast('Failed to load connections', 'error');
+      }
+    });
+  }
+  /* ---------- TOAST ---------- */
+  private showToast(message: string, type: 'success' | 'error'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom',
+      panelClass: type === 'success'
+        ? ['toast-success']
+        : ['toast-error']
+    });
+  }
+  private isApproved(): boolean {
+  return localStorage.getItem('approved') === 'true';
+}
 }

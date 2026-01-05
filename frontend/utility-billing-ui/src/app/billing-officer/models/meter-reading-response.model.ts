@@ -1,12 +1,9 @@
 export interface MeterReadingResponse {
   id: string;
   connectionId: string;
-  consumerName: string;
-  meterNumber: string;
-  utilityName: string;
-  previousReading: number;
-  currentReading: number;
-  unitsConsumed: number;
+  consumerId: string;
+  utilityId: string;
+  readingValue: number;
   readingDate: string;
-  status: 'PENDING' | 'VERIFIED' | 'DISPUTED';
+  createdAt: string;
 }

@@ -1,74 +1,101 @@
-<h2>Meter Readings</h2>
-<p class="subtitle">Enter and manage monthly meter readings</p>
+<div class="meter-page">
 
-<!-- STATS -->
-<div class="stats">
-  <div class="card">
-    <span>Total Readings</span>
-    <h3>{{ stats.total }}</h3>
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h2>Meter Readings</h2>
+      <p class="subtitle">Enter and manage monthly meter readings</p>
+    </div>
   </div>
-  <div class="card warning">
-    <span>Pending</span>
-    <h3>{{ stats.pending }}</h3>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <span>Current Month</span>
+      <h3>{{ stats.month }}</h3>
+    </div>
   </div>
-  <div class="card success">
-    <span>Verified</span>
-    <h3>{{ stats.verified }}</h3>
+
+  <!-- FORM CARD -->
+  <div class="card form-card">
+    <h3>Add New Reading</h3>
+
+    <div class="form-grid">
+      <input placeholder="Connection ID" [(ngModel)]="form.connectionId" />
+      <input placeholder="Consumer ID" [(ngModel)]="form.consumerId" />
+      <input placeholder="Utility ID" [(ngModel)]="form.utilityId" />
+      <input
+        type="number"
+        placeholder="Meter Reading Value"
+        [(ngModel)]="form.readingValue" />
+      <input type="date" [(ngModel)]="form.readingDate" />
+    </div>
+
+    <div class="form-actions">
+      <button class="primary" (click)="createReading()">+ New Reading</button>
+      <button class="secondary" (click)="loadReadings()">Load Readings</button>
+     
+    </div>
   </div>
-  <div class="card info">
-    <span>This Month</span>
-    <h3>{{ stats.month }}</h3>
+
+  <!-- READINGS TABLE -->
+  <div class="card table-card">
+    <div class="table-header">
+      <h3>Meter Readings</h3>
+      <input
+        class="search"
+        placeholder="Search by connection ID..."
+        [(ngModel)]="search" />
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Connection ID</th>
+            <th>Consumer ID</th>
+            <th>Utility ID</th>
+            <th>Reading</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let r of filteredReadings()">
+            <td class="mono">{{ r.connectionId }}</td>
+            <td>{{ r.consumerId }}</td>
+            <td>{{ r.utilityId }}</td>
+            <td class="value">{{ r.readingValue }}</td>
+            <td>{{ r.readingDate | date }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
-<!-- FORM -->
-<div class="form">
-  <input placeholder="Connection ID"
-         [(ngModel)]="form.connectionId" />
+  <!-- CONNECTIONS WITHOUT READINGS -->
+  <div class="card table-card" *ngIf="connectionsWithoutReadings.length">
+    <h3>Connections Without Readings</h3>
 
-  <input type="number"
-         placeholder="Current Reading"
-         [(ngModel)]="form.currentReading" />
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Connection ID</th>
+            <th>Consumer ID</th>
+            <th>Utility ID</th>
+          </tr>
+        </thead>
 
-  <button (click)="createReading()">+ New Reading</button>
-  <button class="secondary" (click)="loadReadings()">Load</button>
-</div>
+        <tbody>
+          <tr *ngFor="let c of connectionsWithoutReadings">
+            <td class="mono">{{ c.id }}</td>
+            <td>{{ c.consumerId }}</td>
+            <td>{{ c.utilityId }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-<!-- TABLE -->
-<div class="table-card">
-  <input class="search"
-         placeholder="Search by consumer..."
-         [(ngModel)]="search" />
-
-  <table>
-    <thead>
-      <tr>
-        <th>Consumer</th>
-        <th>Meter</th>
-        <th>Utility</th>
-        <th>Previous</th>
-        <th>Current</th>
-        <th>Consumption</th>
-        <th>Date</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let r of filteredReadings()">
-        <td>{{ r.consumerName }}</td>
-        <td>{{ r.meterNumber }}</td>
-        <td>{{ r.utilityName }}</td>
-        <td>{{ r.previousReading }}</td>
-        <td>{{ r.currentReading }}</td>
-        <td class="bold">{{ r.unitsConsumed }}</td>
-        <td>{{ r.readingDate | date }}</td>
-        <td>
-          <span class="badge" [ngClass]="r.status.toLowerCase()">
-            {{ r.status }}
-          </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>

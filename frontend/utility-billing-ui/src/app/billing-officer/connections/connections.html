@@ -1,0 +1,81 @@
+<div class="connections-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h2>Connections</h2>
+      <p class="subtitle">
+        Select a connection to add meter readings
+      </p>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="state loading">
+    Loading connections...
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div *ngIf="!loading && connections.length === 0" class="state empty">
+    No connections available for billing.
+  </div>
+
+  <!-- CONNECTION CARDS -->
+  <div class="cards" *ngIf="!loading && connections.length > 0">
+
+    <div class="card" *ngFor="let c of connections">
+
+      <!-- TOP -->
+      <div class="card-header">
+        <div class="avatar">
+          {{ c.consumerName.charAt(0) }}
+        </div>
+
+        <div class="header-text">
+          <h3>{{ c.consumerName }}</h3>
+          <!-- <span class="muted">
+            Connection ID: {{ c.connectionId }}
+          </span> -->
+        </div>
+
+        <!-- <span
+          class="status-badge"
+          [ngClass]="c.status.toLowerCase()">
+          {{ c.status }}
+        </span> -->
+      </div>
+
+      <!-- INFO GRID -->
+      <div class="info-grid">
+        <div>
+          <label>Consumer ID</label>
+          <span>{{ c.consumerId }}</span>
+        </div>
+
+        <div>
+          <label>Utility</label>
+          <span>{{ c.utilityName }}</span>
+        </div>
+        <div>
+          <label>Utility</label>
+          <span>{{ c.utilityId }}</span>
+        </div>
+
+        <div>
+          <label>Tariff</label>
+          <span>{{ c.tariffType }}</span>
+        </div>
+      </div>
+
+      <!-- ACTION -->
+      <button
+        class="primary-btn"
+       
+        (click)="addReading(c)">
+        ➕ Add Meter Reading
+      </button>
+
+    </div>
+  </div>
+
+</div>

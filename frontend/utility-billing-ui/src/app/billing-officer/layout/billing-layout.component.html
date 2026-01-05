@@ -14,7 +14,12 @@
         <span class="text" *ngIf="!sidebarCollapsed">Dashboard</span>
       </a>
     </li>
-
+    <li>
+      <a routerLink="/billing/bills-view" routerLinkActive="active">
+        <span class="icon">🧾</span>
+        <span class="text" *ngIf="!sidebarCollapsed">Consumers</span>
+      </a>
+    </li>
     <li>
       <a routerLink="/billing/readings" routerLinkActive="active">
         <span class="icon">🧮</span>
@@ -28,6 +33,7 @@
         <span class="text" *ngIf="!sidebarCollapsed">Generate Bills</span>
       </a>
     </li>
+    
   </ul>
 
   <!-- LOGOUT AT BOTTOM -->
