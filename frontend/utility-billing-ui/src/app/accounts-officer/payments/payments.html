@@ -1,1 +1,45 @@
-<p>payments works!</p>
+<div class="payments-container">
+
+  <h2>Payments</h2>
+  <p class="subtitle">All completed and pending consumer payments</p>
+
+  <!-- LOADING -->
+  <p *ngIf="loading" class="info">Loading payments...</p>
+
+  <!-- EMPTY -->
+  <p *ngIf="!loading && payments.length === 0" class="info">
+    No payments found
+  </p>
+
+  <!-- TABLE -->
+  <div class="table-card" *ngIf="!loading && payments.length > 0">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Payment ID</th>
+          <th>Bill ID</th>
+          <th>Amount</th>
+          <th>Method</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let p of payments">
+          <td class="mono">{{ p.paymentId | slice:0:8 }}</td>
+          <td class="mono">{{ p.billId | slice:0:8 }}</td>
+          <td class="amount">₹ {{ p.amount }}</td>
+          <td>{{ p.method || 'OTP' }}</td>
+          <td>
+            <span class="status"
+                  [ngClass]="p.status.toLowerCase()">
+              {{ p.status }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>

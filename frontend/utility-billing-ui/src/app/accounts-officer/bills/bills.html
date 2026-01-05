@@ -1,0 +1,56 @@
+<div class="accounts-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h2>Bills Overview</h2>
+    <p class="subtitle">
+      Track bills, overdue payments, and send reminders
+    </p>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div *ngIf="!bills.length" class="empty-state">
+    No bills available
+  </div>
+
+  <!-- BILLS GRID -->
+  <div class="bill-grid">
+
+    <div class="bill-card" *ngFor="let b of bills">
+
+      <!-- HEADER -->
+      <div class="card-header">
+        <h3>{{ b.billId }}</h3>
+
+        <span
+          class="status"
+          [ngClass]="b.status.toLowerCase()">
+          {{ b.status }}
+        </span>
+      </div>
+
+      <!-- DETAILS -->
+      <div class="details">
+        <p>
+          <span>Consumer ID</span>
+          <strong>{{ b.consumerId }}</strong>
+        </p>
+
+        <p>
+          <span>Amount</span>
+          <strong class="amount">₹ {{ b.amount }}</strong>
+        </p>
+      </div>
+
+      <!-- ACTION -->
+      <button
+        *ngIf="b.status === 'OVERDUE'"
+        class="notify-btn"
+        (click)="sendReminder(b.id)">
+        Send Reminder
+      </button>
+
+    </div>
+  </div>
+
+</div>

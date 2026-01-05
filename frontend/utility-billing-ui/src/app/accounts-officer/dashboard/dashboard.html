@@ -1,2 +1,46 @@
-<app-navbar></app-navbar>
-<p>dashboard works!</p>
+<div class="accounts-dashboard">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h2>Accounts Dashboard</h2>
+    <p class="subtitle">
+      Overview of revenue, payments, and overdue bills
+    </p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <span>Total Bills</span>
+      <h2>{{ totalBills }}</h2>
+    </div>
+
+    <div class="stat-card success">
+      <span>Paid Bills</span>
+      <h2>{{ paidBills }}</h2>
+    </div>
+
+    <div class="stat-card danger">
+      <span>Overdue Bills</span>
+      <h2>{{ overdueBills }}</h2>
+    </div>
+
+    <div class="stat-card money">
+      <span>Total Revenue</span>
+      <h2>₹ {{ totalRevenue }}</h2>
+    </div>
+
+  </div>
+
+  <!-- CHART -->
+  <div class="chart-card">
+  <h3>Payments vs Overdue Trend</h3>
+
+  <div class="chart-wrapper">
+    <canvas id="paymentChart"></canvas>
+  </div>
+</div>
+
+
+</div>

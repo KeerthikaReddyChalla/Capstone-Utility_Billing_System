@@ -1,0 +1,127 @@
+* {
+  box-sizing: border-box;
+}
+
+.accounts-dashboard {
+  padding: 24px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* HEADER */
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f3a36;
+}
+
+.subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+/* STATS GRID */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+/* STAT CARD */
+.stat-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 14px 34px rgba(0,0,0,0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card span {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.stat-card h2 {
+  margin-top: 8px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f3a36;
+}
+
+/* COLOR VARIANTS */
+.stat-card.success h2 {
+  color: #166534;
+}
+
+.stat-card.danger h2 {
+  color: #991b1b;
+}
+
+.stat-card.money h2 {
+  color: #14532d;
+}
+
+/* LEFT ACCENT */
+.stat-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: #0f3a36;
+}
+
+.stat-card.success::before {
+  background: #16a34a;
+}
+
+.stat-card.danger::before {
+  background: #dc2626;
+}
+
+.stat-card.money::before {
+  background: #14532d;
+}
+
+/* CHART CARD */
+.chart-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+}
+
+.chart-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #0f3a36;
+}
+.chart-wrapper {
+  position: relative;
+  height: 320px; 
+  width: 100%;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .accounts-dashboard {
+    padding: 16px;
+  }
+
+  .page-header h2 {
+    font-size: 20px;
+  }
+
+  .stat-card h2 {
+    font-size: 24px;
+  }
+}
