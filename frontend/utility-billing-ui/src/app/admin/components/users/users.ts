@@ -18,12 +18,17 @@ export class UsersComponent implements OnInit {
   users: User[] = [];
   filteredUsers: User[] = [];
 
+  // ✅ PAGINATION
+  pagedUsers: User[] = [];
+  currentPage = 1;
+  pageSize = 8;          // change if you want
+  totalPages = 0;
+
   search = '';
   roleFilter: 'ALL' | 'CONSUMER' | 'BILLING_OFFICER' | 'ACCOUNTS_OFFICER' = 'ALL';
 
   loading = false;
 
-  /* ---------- CONFIRM DIALOG STATE ---------- */
   showConfirmDialog = false;
   selectedUser: User | null = null;
 
@@ -70,7 +75,35 @@ export class UsersComponent implements OnInit {
       return matchesRole && matchesSearch;
     });
 
+    // ✅ PAGINATION RESET AFTER FILTER
+    this.currentPage = 1;
+    this.updatePagination();
+
     this.cdr.detectChanges();
+  }
+
+  /* ---------- PAGINATION LOGIC ---------- */
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.pageSize);
+
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+
+    this.pagedUsers = this.filteredUsers.slice(start, end);
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
   }
 
   /* ---------- OPEN CONFIRM ---------- */
