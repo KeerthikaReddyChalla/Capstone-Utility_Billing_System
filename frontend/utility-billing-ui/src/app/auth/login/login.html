@@ -1,8 +1,14 @@
-<div class="login-container">
+<!-- NAVBAR -->
+<div class="auth-navbar">
+  <div class="logo" routerLink="/">UtilityBilling</div>
+</div>
+
+<!-- LOGIN -->
+<div class="login-page">
   <div class="login-card">
 
-    <h2>Utility Billing System</h2>
-    <p class="subtitle">Login to continue</p>
+    <h2>Login</h2>
+   
 
     <div class="form-group">
       <label>Email</label>
@@ -22,18 +28,15 @@
       />
     </div>
 
-    <div class="error" *ngIf="errorMessage">
-      {{ errorMessage }}
-    </div>
-
     <button
       class="login-btn"
       (click)="login()"
       [disabled]="loading"
     >
-      {{ loading ? 'Logging in...' : 'Login' }}
+     Login
     </button>
-
+<p class="forgot-password" (click)="goToForgotPassword()">
+  Forgot password?
+</p>
   </div>
 </div>
-

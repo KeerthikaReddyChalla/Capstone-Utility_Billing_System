@@ -1,3 +1,7 @@
+<nav class="auth-navbar">
+  <div class="logo" routerLink="/">UtilityBilling</div>
+</nav>
+<div class="auth-page">
 <div class="auth-container">
   <h2>Register</h2>
 
@@ -28,16 +32,13 @@
     />
 
     <select [(ngModel)]="registerData.role" name="role">
-      <option value="ADMIN">Admin</option>
-      <option value="BILLING_OFFICER">Billing Officer</option>
-      <option value="ACCOUNTS_OFFICER">Accounts Officer</option>
+      
       <option value="CONSUMER">Consumer</option>
     </select>
 
     <button type="submit">Register</button>
 
-    <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
-    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+   
 
     <p class="link">
       Already have an account?
@@ -45,4 +46,5 @@
     </p>
 
   </form>
+</div>
 </div>

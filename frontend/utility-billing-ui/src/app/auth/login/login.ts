@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { TokenService } from '../../core/auth/token.service';
 import { LoginRequest } from '../../core/auth/models/login-request.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   templateUrl: './login.html',
   styleUrl: './login.css',
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, MatSnackBarModule, RouterLink, RouterModule]
 })
 export class LoginComponent {
 
@@ -21,26 +22,28 @@ export class LoginComponent {
   };
 
   loading = false;
-  errorMessage = '';
 
   constructor(
     private authService: AuthService,
     private tokenService: TokenService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   login(): void {
+
+
     if (!this.loginData.email || !this.loginData.password) {
-      this.errorMessage = 'Email and password are required';
+      this.showToast('Email and password are required', 'error');
       return;
     }
 
     this.loading = true;
-    this.errorMessage = '';
 
     this.authService.login(this.loginData).subscribe({
       next: (response) => {
-        // Save JWT + role extracted from token
+
+        // Save JWT + userId
         this.tokenService.saveToken(response.token);
         this.tokenService.saveUserId(response.userId);
 
@@ -50,18 +53,31 @@ export class LoginComponent {
         this.loading = false;
 
         if (role) {
+          this.showToast('Login successful', 'success');
           this.redirectByRole(role);
         } else {
-          this.errorMessage = 'Unable to determine user role';
+          this.showToast('Unable to determine user role', 'error');
         }
       },
+
       error: () => {
-        this.loading = false;
-        this.errorMessage = 'Invalid email or password';
-      }
+  this.loading = false;
+
+  if (!this.isApproved()) {
+    this.showToast(
+      'Your account is pending admin approval. Please wait.',
+      'error'
+    );
+  } else {
+    this.showToast('Invalid email or password', 'error');
+  }
+}
+
+
     });
   }
 
+  /* ---------- ROLE REDIRECTION ---------- */
   private redirectByRole(role: string | null): void {
     switch (role) {
       case 'ADMIN':
@@ -69,7 +85,7 @@ export class LoginComponent {
         break;
 
       case 'BILLING_OFFICER':
-        this.router.navigate(['/billing']);
+        this.router.navigate(['/billing/reports']);
         break;
 
       case 'ACCOUNTS_OFFICER':
@@ -77,12 +93,29 @@ export class LoginComponent {
         break;
 
       case 'CONSUMER':
-        this.router.navigate(['/consumer']);
+        this.router.navigate(['/consumer/home']);
         break;
 
       default:
-        console.error('Unknown role:', role);
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
     }
   }
+
+  /* ---------- TOAST ---------- */
+  private showToast(message: string, type: 'success' | 'error'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom',
+      panelClass: type === 'success'
+        ? ['toast-success']
+        : ['toast-error']
+    });
+  }
+  private isApproved(): boolean {
+  return localStorage.getItem('approved') === 'true';
+}
+goToForgotPassword() {
+  this.router.navigate(['/forgot-password']);
+}
 }

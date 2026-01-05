@@ -1,42 +1,113 @@
+/* NAVBAR */
+.auth-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+
+  z-index: 1000;
+  background: linear-gradient(135deg, #14532d, #155e75);
+}
+
+.auth-navbar .logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.4px;
+}
+
+/* PAGE WRAPPER */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding-top: 64px; /* space for navbar */
+  background: #f8fafc;
+}
+
+/* REGISTER CARD */
 .auth-container {
-  width: 360px;
-  margin: 80px auto;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  width: 380px;
+  padding: 36px;
+  border-radius: 16px;
+  padding-right: 60px;
+  background: #ffffff;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.12);
 }
 
-h2 {
+/* TITLE */
+.auth-container h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
 }
 
-input, select {
+/* INPUTS */
+.auth-container input,
+.auth-container select {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
 }
 
-button {
+.auth-container input:focus,
+.auth-container select:focus {
+  outline: none;
+  border-color: #16a34a;
+}
+
+/* BUTTON */
+.auth-container button {
   width: 100%;
-  padding: 10px;
-  background: #1976d2;
+  padding: 12px;
+  margin-top: 10px;
+
+  background: linear-gradient(135deg, #14532d, #155e75);
   color: white;
   border: none;
+  border-radius: 12px;
+
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.auth-container button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(21, 94, 117, 0.35);
+}
+
+/* LINK */
+.link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.link a {
+  color: #14532d;
+  font-weight: 600;
+  text-decoration: none;
+}
+.logo{
   cursor: pointer;
 }
 
-.error {
-  color: red;
-  text-align: center;
-}
-
-.success {
-  color: green;
-  text-align: center;
-}
-
-.link {
-  text-align: center;
-  margin-top: 10px;
+.logo:hover {
+  opacity: 0.8;
 }
