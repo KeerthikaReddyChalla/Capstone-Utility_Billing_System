@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ConsumerService } from '../../services/consumer.service';
 import { TokenService } from '../../../core/auth/token.service';
 import { BillResponse } from '../../../billing-officer/models/bill-response.model';
@@ -19,6 +20,7 @@ export class ConsumerBillsComponent implements OnInit {
   constructor(
     private consumerService: ConsumerService,
     private tokenService: TokenService,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -43,7 +45,10 @@ export class ConsumerBillsComponent implements OnInit {
   }
 
   makePayment(bill: BillResponse): void {
-    console.log('Make payment for bill:', bill.id);
-    // Payment flow comes later (PayPal / Razorpay / Stripe)
+    this.router.navigate(['/consumer/pay', bill.id],{
+      state: {
+        amount: bill.amount
+      }
+    });
   }
 }

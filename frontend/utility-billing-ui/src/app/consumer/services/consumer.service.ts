@@ -34,16 +34,16 @@ export class ConsumerService {
      CONNECTIONS
      =============================== */
 
-  createConnection(payload: {
-    consumerId: string;
-    utilityId: string;
-    tariffType: string;
-  }): Observable<any> {
-    return this.http.post(
-      `${this.baseUrl}/connections`,
-      payload
-    );
-  }
+  // createConnection(payload: {
+  //   consumerId: string;
+  //   utilityId: string;
+  //   tariffType: string;
+  // }): Observable<any> {
+  //   return this.http.post(
+  //     `${this.baseUrl}/connections`,
+  //     payload
+  //   );
+  // }
 
  
   getConnectionsByConsumer(consumerId: string): Observable<Connection[]> {
@@ -72,6 +72,12 @@ getBillsByConsumer(consumerId: string): Observable<BillResponse[]> {
   
   );
 }
+getPendingStatus(email: string) {
+  return this.http.get<boolean>(
+    `http://localhost:9999/auth/pending-status?email=${email}`
+  );
+}
+
 
 
 }

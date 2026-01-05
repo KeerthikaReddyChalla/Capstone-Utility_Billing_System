@@ -1,29 +1,36 @@
 <div class="connection-container">
 
-  <h2>Request New Connection</h2>
-  <p class="subtitle">
-    Select utility and tariff plan. Your request will be approved by admin.
-  </p>
+  <!-- HEADER -->
+  <div class="page-header">
+    <h2>Request New Connection</h2>
+    <p>
+      Choose a utility and tariff plan. Your request will be reviewed by an administrator.
+    </p>
+  </div>
 
   <!-- REQUEST FORM -->
   <div *ngIf="!submitted" class="form-card">
 
-    <label>Utility</label>
-    <select (change)="onUtilitySelect($event)">
-      <option value="">Select utility</option>
-      <option *ngFor="let u of utilities" [value]="u.id">
-        {{ u.name }}
-      </option>
-    </select>
+    <div class="form-group">
+      <label>Utility</label>
+      <select (change)="onUtilitySelect($event)">
+        <option value="">Select utility</option>
+        <option *ngFor="let u of utilities" [value]="u.id">
+          {{ u.name }}
+        </option>
+      </select>
+    </div>
 
-    <label>Tariff Plan</label>
-    <select [(ngModel)]="form.tariffType">
-      <option value="">Select tariff</option>
-      <option value="RESIDENTIAL_FLAT">Residential Flat</option>
-      <option value="RESIDENTIAL_STANDARD">Residential Standard</option>
-      <option value="COMMERCIAL_STANDARD">Commercial Standard</option>
-      <option value="GOVT_SUBSIDIZED">Government Subsidized</option>
-    </select>
+    <div class="form-group">
+      <label>Tariff Plan</label>
+      <select [(ngModel)]="form.tariffType">
+        <option value="">Select tariff</option>
+        <option value="RESIDENTIAL_FLAT">Residential Flat</option>
+        <option value="RESIDENTIAL_STANDARD">Residential Standard</option>
+        <option value="COMMERCIAL_STANDARD">Commercial Standard</option>
+        <option value="GOVT_SUBSIDIZED">Government Subsidized</option>
+      </select>
+    </div>
 
     <button class="submit-btn" (click)="submit()">
       Submit Request
@@ -33,39 +40,49 @@
   <!-- SUCCESS -->
   <div *ngIf="submitted" class="success-card">
     <h3>Request Submitted</h3>
-    <p>Your connection request has been sent for admin approval.</p>
+    <p>Your connection request has been sent for approval.</p>
   </div>
 
   <!-- CONNECTION LIST -->
   <div class="connections-section">
-    <h3>Current Connections</h3>
+    <h3>Your Connections</h3>
 
-    <div *ngIf="loadingConnections">
+    <div *ngIf="loadingConnections" class="loading">
       Loading connections...
     </div>
 
     <table *ngIf="!loadingConnections && connections.length > 0">
       <thead>
         <tr>
-          <th>ID</th>
+          <!-- <th>ID</th> -->
           <th>Utility</th>
           <th>Tariff</th>
           <th>Status</th>
         </tr>
       </thead>
+
       <tbody>
         <tr *ngFor="let c of connections">
-          <td>{{ c.id }}</td>
+          <!-- <td class="mono">{{ c.id }}</td> -->
           <td>{{ c.utilityId }}</td>
           <td>{{ c.tariffType }}</td>
           <td>
-            {{ c.active ? 'ACTIVE' : 'INACTIVE' }}
+            <span
+              class="status"
+              [ngClass]="{
+                pending: c.status === 'PENDING',
+                active: c.status === 'ACTIVE',
+                rejected: c.status === 'REJECTED'
+              }"
+            >
+              {{ c.status }}
+            </span>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <div *ngIf="!loadingConnections && connections.length === 0">
+    <div *ngIf="!loadingConnections && connections.length === 0" class="empty">
       No connections yet
     </div>
   </div>

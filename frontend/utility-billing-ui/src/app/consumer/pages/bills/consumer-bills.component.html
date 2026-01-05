@@ -1,40 +1,41 @@
 <div class="bills-page">
 
-  <h1>Bills & Payments</h1>
-  <p class="subtitle">View and pay your utility bills</p>
+  <header class="page-header">
+    <h1>Bills & Payments</h1>
+    <p class="subtitle">Manage and pay your utility bills securely</p>
+  </header>
 
-  <div *ngIf="loading" class="loading">
-    Loading your bills...
+  <div *ngIf="loading" class="state">Loading your bills...</div>
+
+  <div *ngIf="!loading && bills.length === 0" class="state empty">
+    No bills available
   </div>
 
-  <div *ngIf="!loading && bills.length === 0" class="empty">
-    🎉 No bills to show
-  </div>
+  <div class="bill-grid" *ngIf="!loading && bills.length">
 
-  <div class="bill-grid" *ngIf="!loading && bills.length > 0">
     <div class="bill-card" *ngFor="let bill of bills">
 
-      <div class="bill-header">
+      <div class="bill-top">
         <h3>{{ bill.utilityName }}</h3>
+
         <span class="status" [ngClass]="bill.status.toLowerCase()">
           {{ bill.status }}
         </span>
       </div>
 
-      <div class="bill-body">
-        <div class="row">
-          <span>Billing Cycle</span>
+      <div class="bill-details">
+        <div>
+          <span>Billing Cycle: </span>
           <strong>{{ bill.billingCycle | date:'MMM yyyy' }}</strong>
         </div>
 
-        <div class="row">
-          <span>Units Consumed</span>
+        <div>
+          <span>Units: </span>
           <strong>{{ bill.unitsConsumed }}</strong>
         </div>
 
-        <div class="row amount">
-          <span>Amount</span>
-          <strong>₹ {{ bill.amount }}</strong>
+        <div class="amount">
+          ₹ {{ bill.amount }}
         </div>
       </div>
 
@@ -42,13 +43,14 @@
         class="pay-btn"
         *ngIf="bill.status !== 'PAID'"
         (click)="makePayment(bill)">
-        Make Payment
+        Pay Now
       </button>
 
-      <div class="paid-label" *ngIf="bill.status === 'PAID'">
-        ✔ Paid
+      <div class="paid" *ngIf="bill.status === 'PAID'">
+        ✔ Payment Completed
       </div>
-    </div>
-  </div>
 
+    </div>
+
+  </div>
 </div>

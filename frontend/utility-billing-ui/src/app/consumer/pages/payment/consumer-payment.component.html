@@ -1,0 +1,86 @@
+<div class="payment-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+   
+
+    <h1>Pay Your Utility Bill</h1>
+    <p>
+      Fast, secure, OTP-based payment for your utility services
+    </p>
+  </div>
+
+  <!-- PAYMENT CARD -->
+  <div class="payment-card">
+
+    <div class="card-grid">
+
+      <!-- LEFT : PAYMENT FLOW -->
+      <div class="left">
+
+        <!-- BILL DETAILS -->
+        <div class="field">
+          <label>Bill ID</label>
+          <input type="text" [value]="billId" readonly />
+        </div>
+
+        <div class="field">
+          <label>Amount to Pay</label>
+          <div class="amount-box">
+            <span>₹</span>
+            <input type="text" [value]="amount" readonly />
+          </div>
+        </div>
+
+        <!-- SEND OTP -->
+        <button
+          class="primary-btn"
+          (click)="sendOtp()"
+          [disabled]="otpSent">
+          {{ otpSent ? 'OTP Sent' : 'Send OTP' }}
+        </button>
+
+        <!-- OTP INPUT -->
+        <div class="otp-section" *ngIf="otpSent">
+          <label>Enter OTP</label>
+          <input
+            type="text"
+            placeholder="6-digit OTP"
+            [(ngModel)]="otp" />
+
+          <button
+            class="success-btn"
+            (click)="verifyAndPay()">
+            Verify & Pay
+          </button>
+        </div>
+
+        <!-- PAYMENT ICONS -->
+        <div class="logos">
+          <span>Visa</span>
+          <span>Mastercard</span>
+          <span>UPI</span>
+        </div>
+      </div>
+
+      <!-- RIGHT : INFO -->
+      <div class="right">
+        <h3>Quick & Secure</h3>
+        <p>
+          Complete your payment safely using OTP verification.
+        </p>
+
+        <ul>
+          <li>✔ Instant confirmation</li>
+          <li>✔ OTP protected payment</li>
+          <li>✔ No hidden charges</li>
+          <li>✔ High-grade security</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+ 
+
+</div>

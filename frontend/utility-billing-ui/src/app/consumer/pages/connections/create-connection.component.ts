@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+
 import { ConsumerService } from '../../services/consumer.service';
 import { TokenService } from '../../../core/auth/token.service';
 import { Connection } from '../../models/connection.model';
@@ -8,7 +10,7 @@ import { Connection } from '../../models/connection.model';
 @Component({
   selector: 'app-create-connection',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatSnackBarModule],
   templateUrl: './create-connection.html',
   styleUrl: './create-connection.css'
 })
@@ -28,6 +30,7 @@ export class CreateConnectionComponent implements OnInit {
   constructor(
     private consumerService: ConsumerService,
     private tokenService: TokenService,
+    private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -42,7 +45,7 @@ export class CreateConnectionComponent implements OnInit {
         this.utilities = data;
       },
       error: () => {
-        console.error('Failed to load utilities');
+        this.showToast('Failed to load utilities', 'error');
       }
     });
   }
@@ -57,7 +60,7 @@ export class CreateConnectionComponent implements OnInit {
     if (!consumerId) return;
 
     if (!this.form.utilityId || !this.form.tariffType) {
-      alert('Please select utility and tariff');
+      this.showToast('Please select utility and tariff', 'error');
       return;
     }
 
@@ -71,10 +74,20 @@ export class CreateConnectionComponent implements OnInit {
       next: () => {
         this.submitted = true;
         this.form = { utilityId: '', tariffType: '' };
+
+        this.showToast(
+          'Connection request submitted for approval',
+          'success'
+        );
+
         this.loadConnections();
+        this.cdr.detectChanges();
       },
       error: (err) => {
-        alert(err.error?.message || 'Request failed');
+        this.showToast(
+          err.error?.message || 'Connection request failed',
+          'error'
+        );
       }
     });
   }
@@ -93,7 +106,24 @@ export class CreateConnectionComponent implements OnInit {
       },
       error: () => {
         this.loadingConnections = false;
+        this.showToast('Failed to load connections', 'error');
       }
     });
+  }
+
+  /* ---------- TOAST ---------- */
+  private showToast(message: string, type: 'success' | 'error'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'bottom',
+      panelClass: type === 'success'
+        ? ['toast-success']
+        : ['toast-error']
+    });
+  }
+
+  private isApproved(): boolean {
+    return localStorage.getItem('approved') === 'true';
   }
 }

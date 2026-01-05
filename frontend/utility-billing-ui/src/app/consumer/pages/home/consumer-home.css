@@ -1,83 +1,155 @@
+/* ===== PAGE WRAPPER ===== */
 .home {
   max-width: 1200px;
   margin: auto;
+  padding: 24px;
 }
 
-/* HERO */
+/* ===== HERO ===== */
 .hero {
-  margin-bottom: 40px;
+  background: linear-gradient(
+    135deg,
+    rgba(19, 76, 71, 0.08),
+    rgba(19, 76, 71, 0.02)
+  );
+  border-radius: 24px;
+  padding: 48px 32px;
+  margin-bottom: 48px;
+}
+
+.hero-content {
+  max-width: 720px;
 }
 
 .hero h1 {
-  font-size: 28px;
-  margin-bottom: 8px;
+  font-size: 36px;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.hero h1 span {
+  color: #134c47;
 }
 
 .hero p {
-  color: #64748b;
+  color: #475569;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 24px;
 }
 
-/* TARIFFS */
+/* ===== PRIMARY BUTTON ===== */
+.primary-btn {
+  padding: 14px 28px;
+  border-radius: 14px;
+  border: none;
+  background: #134c47;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.primary-btn:hover {
+  background: #0f3f3a;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(19, 76, 71, 0.25);
+}
+
+/* ===== TARIFF SECTION ===== */
+.tariffs {
+  margin-top: 40px;
+}
+
 .tariffs h2 {
-  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
 }
 
+.subtitle {
+  color: #64748b;
+  margin: 6px 0 24px;
+}
+
+/* ===== GRID ===== */
 .tariff-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
 }
 
+/* ===== CARD ===== */
 .tariff-card {
   background: white;
-  padding: 24px;
-  border-radius: 16px;
+  padding: 26px;
+  border-radius: 18px;
   border: 1px solid #e5e7eb;
-  transition: transform 0.2s ease, box-shadow 0.2s;
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tariff-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(19, 76, 71, 0.08),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tariff-card:hover::before {
+  opacity: 1;
 }
 
 .tariff-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+  border-color: rgba(19, 76, 71, 0.25);
 }
 
-.tariff-card h3 {
+/* ===== CARD CONTENT ===== */
+.card-header h3 {
+  font-size: 18px;
+  font-weight: 600;
   margin-bottom: 6px;
+  color: #134c47;
 }
 
 .desc {
   color: #64748b;
   font-size: 14px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .price {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .fixed {
   font-size: 14px;
   color: #475569;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
-/* CTA */
-.cta {
-  margin-top: 48px;
-  text-align: center;
-}
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .hero {
+    padding: 36px 24px;
+  }
 
-.cta button {
-  padding: 14px 28px;
-  border-radius: 12px;
-  border: none;
-  background: #2563eb;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
+  .hero h1 {
+    font-size: 28px;
+  }
 
-.cta button:hover {
-  background: #1d4ed8;
+  .primary-btn {
+    width: 100%;
+  }
 }

@@ -1,113 +1,95 @@
 .bills-page {
-  padding: 24px;
+  max-width: 1200px;
+  margin: auto;
 }
 
-h1 {
-  font-size: 24px;
-  font-weight: 600;
+.page-header {
+  margin-bottom: 24px;
 }
 
 .subtitle {
   color: #64748b;
-  margin-bottom: 24px;
 }
 
-/* GRID */
 .bill-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
-/* CARD */
 .bill-card {
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  transition: transform 0.25s ease;
 }
 
-/* HEADER */
-.bill-header {
+.bill-card:hover {
+  transform: translateY(-4px);
+}
+
+.bill-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.bill-header h3 {
-  margin: 0;
-  font-size: 18px;
-}
-
-/* STATUS */
-.status {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.status.generated {
-  background: #e0f2fe;
-  color: #0369a1;
-}
-
-.status.overdue {
-  background: #fee2e2;
-  color: #b91c1c;
-}
-
-.status.paid {
-  background: #dcfce7;
-  color: #166534;
-}
-
-/* BODY */
-.bill-body {
+.bill-details {
   margin-top: 16px;
+  display: grid;
+  gap: 8px;
 }
 
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  color: #475569;
+.bill-details span {
+  color: #64748b;
+  font-size: 13px;
 }
 
 .amount {
-  font-size: 18px;
-  color: #0f172a;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f3a36;
+  margin-top: 10px;
 }
 
-/* BUTTON */
 .pay-btn {
-  margin-top: 16px;
+  margin-top: auto;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: none;
-  background: #2563eb;
-  color: #ffffff;
-  font-weight: 500;
+  background: #134c47;
+  color: white;
+  font-weight: 600;
   cursor: pointer;
+  margin-top:20px;
 }
 
 .pay-btn:hover {
-  background: #1d4ed8;
+  background: #0f3a36;
 }
 
-.paid-label {
-  margin-top: 16px;
+.paid {
+  margin-top: 14px;
   text-align: center;
   color: #16a34a;
   font-weight: 600;
 }
 
-/* STATES */
-.loading,
-.empty {
+.status {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.pending { background: #fef3c7; color: #92400e; }
+.overdue { background: #fee2e2; color: #991b1b; }
+.paid { background: #dcfce7; color: #166534; }
+
+.state {
+  margin-top: 40px;
+  text-align: center;
   color: #64748b;
-  margin-top: 32px;
 }
