@@ -2,27 +2,27 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { TokenService } from '../../../core/auth/token.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })
 export class NavbarComponent {
 
-  role: string | null = '';
+  constructor(private tokenService: TokenService) {}
 
-  constructor(
-    private authService: AuthService,
-    private tokenService: TokenService,
-    private router: Router
-  ) {
-    this.role = this.tokenService.getRole();
+  isLoggedIn(): boolean {
+    return !!this.tokenService.getToken();
   }
 
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  isApproved(): boolean {
+    const approved = localStorage.getItem('approved');
+    return approved === 'true';
   }
 }
+

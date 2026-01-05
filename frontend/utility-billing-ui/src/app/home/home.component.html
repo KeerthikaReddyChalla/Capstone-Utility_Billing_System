@@ -1,0 +1,175 @@
+
+<div>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <app-navbar></app-navbar>
+  <!-- Background effects -->
+  <div class="hero-bg"></div>
+  <div class="grid-overlay"></div>
+
+  <div class="hero-content">
+   
+
+    <h1>
+      Utility Billing
+      <span class="highlight">System</span>
+    </h1>
+
+    <p>
+      Centralized billing management for electricity, water, gas, and internet services.
+Gain real-time insights, track payments, and manage consumers with ease.
+
+    </p>
+
+    <div class="cta">
+      <a *ngIf="!isLoggedIn() && !isApproved()"
+      routerLink="/register" class="btn-primary big">
+        Get Started →
+      </a>
+    
+    </div>
+
+    <!-- Utility Icons -->
+    <div class="utilities">
+      <div class="util">
+        ⚡
+        <span>Electricity</span>
+      </div>
+      <div class="util">
+        💧
+        <span>Water</span>
+      </div>
+      <div class="util">
+        🔥
+        <span>Gas</span>
+      </div>
+      <div class="util">
+        📶
+        <span>Internet</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom wave -->
+  <svg class="wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+    <path
+      d="M0,120 C120,100 240,80 360,70 480,60 600,60 720,65 840,70 960,80 1080,85 1200,90 1320,90 1440,90 L1440,120 Z"
+      fill="#ffffff">
+    </path>
+  </svg>
+</section>
+
+<!-- FEATURES SECTION -->
+<section class="features">
+  <h2>Comprehensive Features</h2>
+  <p class="subtitle">
+    Everything you need to manage utility billing operations efficiently and accurately.
+  </p>
+
+  <div class="feature-grid">
+
+  <div class="feature-card">
+    <div class="icon">
+      <!-- Users -->
+      <svg viewBox="0 0 24 24" class="lucide">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    </div>
+    <h3>Consumer Management</h3>
+    <p>Comprehensive consumer profiles with utility connections and tariff plans.</p>
+  </div>
+
+  <div class="feature-card">
+    <div class="icon">
+      <!-- Gauge -->
+      <svg viewBox="0 0 24 24" class="lucide">
+        <path d="M12 20a8 8 0 1 0-8-8"/>
+        <path d="M12 12l4-4"/>
+      </svg>
+    </div>
+    <h3>Meter Readings</h3>
+    <p>Accurate monthly meter readings with validation and auto calculation.</p>
+  </div>
+
+  <div class="feature-card">
+    <div class="icon">
+      <!-- Receipt -->
+      <svg viewBox="0 0 24 24" class="lucide">
+        <path d="M4 2v20l4-2 4 2 4-2 4 2V2"/>
+        <path d="M16 8H8"/>
+        <path d="M16 12H8"/>
+      </svg>
+    </div>
+    <h3>Automated Billing</h3>
+    <p>Auto-generate bills using tariffs, fixed charges, and taxes.</p>
+  </div>
+
+  <div class="feature-card">
+    <div class="icon">
+      <!-- Credit Card -->
+      <svg viewBox="0 0 24 24" class="lucide">
+        <rect x="2" y="5" width="20" height="14" rx="2"/>
+        <line x1="2" y1="10" x2="22" y2="10"/>
+      </svg>
+    </div>
+    <h3>Payment Tracking</h3>
+    <p>Track payments, outstanding balances, and history.</p>
+  </div>
+
+  <div class="feature-card">
+    <div class="icon">
+      <!-- Bar Chart -->
+      <svg viewBox="0 0 24 24" class="lucide">
+        <line x1="12" y1="20" x2="12" y2="10"/>
+        <line x1="18" y1="20" x2="18" y2="4"/>
+        <line x1="6" y1="20" x2="6" y2="16"/>
+      </svg>
+    </div>
+    <h3>Analytics & Reports</h3>
+    <p>Revenue, consumption, and outstanding analysis.</p>
+  </div>
+
+  <div class="feature-card">
+    <div class="icon">
+      <!-- Bell -->
+      <svg viewBox="0 0 24 24" class="lucide">
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+    </div>
+    <h3>Notifications</h3>
+    <p>Automated alerts and payment reminders.</p>
+  </div>
+
+  <div class="feature-card">
+    <div class="icon">
+      <!-- Shield -->
+      <svg viewBox="0 0 24 24" class="lucide">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    </div>
+    <h3>Role-Based Access</h3>
+    <p>Secure RBAC for Admin, Billing, Accounts & Consumers.</p>
+  </div>
+
+  <div class="feature-card">
+    <div class="icon">
+      <!-- File -->
+      <svg viewBox="0 0 24 24" class="lucide">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <path d="M14 2v6h6"/>
+      </svg>
+    </div>
+    <h3>Bill Lifecycle</h3>
+    <p>Generated → Due → Paid → Overdue tracking.</p>
+  </div>
+
+
+
+  </div>
+</section>
+</div>

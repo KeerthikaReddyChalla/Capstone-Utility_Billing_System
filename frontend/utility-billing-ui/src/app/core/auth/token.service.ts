@@ -33,7 +33,11 @@ export class TokenService {
     return !!this.getToken();
   }
 
-
+ getEmail(): string | null {
+    const decoded = this.decodeToken();
+    return decoded?.sub || decoded?.email || null;
+  }
+  
   private extractRoleFromToken(token: string): string | null {
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));

@@ -1,14 +1,23 @@
 <nav class="navbar">
-  <div class="navbar-left">
-    <span class="brand">Utility Billing System</span>
-  </div>
+  <div class="logo">UtilityBilling</div>
 
-  <div class="navbar-right">
-    <span class="role">Role: {{ role }}</span>
+  <div class="actions">
+    <!-- Register: only before approval -->
+    <a
+      *ngIf="!isLoggedIn() && !isApproved()"
+      routerLink="/register"
+      class="outline-btn"
+    >
+      Register
+    </a>
 
-    <button class="logout-btn" (click)="logout()">
-      Logout
-    </button>
+    <!-- Login: only after approval -->
+    <a
+      *ngIf="!isLoggedIn() && isApproved()"
+      routerLink="/login"
+      class="outline-btn"
+    >
+      Login
+    </a>
   </div>
 </nav>
-

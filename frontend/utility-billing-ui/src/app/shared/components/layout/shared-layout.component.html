@@ -1,0 +1,164 @@
+
+
+  <!-- MOBILE TOP BAR -->
+  <header class="mobile-topbar">
+    <button class="mobile-toggle" (click)="toggleSidebar()">
+      <svg width="22" height="22" viewBox="0 0 24 24">
+        <path d="M3 12h18M3 6h18M3 18h18"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <span class="mobile-logo">UtilityBill</span>
+  </header>
+  <div class="layout" [class.collapsed]="collapsed">
+
+  <!-- OVERLAY (mobile) -->
+  <div
+    class="overlay"
+    *ngIf="!collapsed"
+    (click)="toggleSidebar()">
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- BRAND (desktop) -->
+    <div class="brand">
+      <button class="toggle" (click)="toggleSidebar()">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path d="M3 12h18M3 6h18M3 18h18"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <span class="logo" *ngIf="!collapsed">
+        UtilityBill
+      </span>
+    </div>
+
+    <!-- MENU -->
+    <nav class="menu">
+
+      <!-- ADMIN -->
+      <ng-container *ngIf="hasRole('ADMIN')">
+        <a routerLink="/admin/approvals" routerLinkActive="active">
+          <i class="icon user"></i>
+          <span *ngIf="!collapsed">User Approvals</span>
+        </a>
+
+        <a routerLink="/admin/connection-approvals" routerLinkActive="active">
+          <i class="icon plug"></i>
+          <span *ngIf="!collapsed">Connections</span>
+        </a>
+
+        <a routerLink="/admin/utilities" routerLinkActive="active">
+          <i class="icon bolt"></i>
+          <span *ngIf="!collapsed">Utilities</span>
+        </a>
+
+        <a routerLink="/admin/users" routerLinkActive="active">
+          <i class="icon users"></i>
+          <span *ngIf="!collapsed">Users</span>
+        </a>
+
+        <a routerLink="/admin/reports" routerLinkActive="active">
+          <i class="icon chart"></i>
+          <span *ngIf="!collapsed">Reports</span>
+        </a>
+      </ng-container>
+
+      <!-- BILLING OFFICER -->
+      <ng-container *ngIf="hasRole('BILLING_OFFICER')">
+        <a routerLink="/billing/reports" routerLinkActive="active">
+          <i class="icon chart"></i>
+          <span *ngIf="!collapsed">Reports</span>
+        </a>
+
+        <a routerLink="/billing/bills-view" routerLinkActive="active">
+          <i class="icon plug"></i>
+          <span *ngIf="!collapsed">Connections</span>
+        </a>
+
+        <a routerLink="/billing/readings" routerLinkActive="active">
+          <i class="icon gauge"></i>
+          <span *ngIf="!collapsed">Meter Readings</span>
+        </a>
+
+        <a routerLink="/billing/generate" routerLinkActive="active">
+          <i class="icon file"></i>
+          <span *ngIf="!collapsed">Generate Bills</span>
+        </a>
+      </ng-container>
+
+      <!-- ACCOUNTS OFFICER -->
+      <ng-container *ngIf="hasRole('ACCOUNTS_OFFICER')">
+        <a routerLink="/accounts/dashboard" routerLinkActive="active">
+          <i class="icon chart"></i>
+          <span *ngIf="!collapsed">Dashboard</span>
+        </a>
+
+        <a routerLink="/accounts/bills" routerLinkActive="active">
+          <i class="icon receipt"></i>
+          <span *ngIf="!collapsed">Bills</span>
+        </a>
+
+        <a routerLink="/accounts/payments" routerLinkActive="active">
+          <i class="icon card"></i>
+          <span *ngIf="!collapsed">Payments</span>
+        </a>
+      </ng-container>
+
+      <!-- CONSUMER -->
+      <ng-container *ngIf="hasRole('CONSUMER')">
+        <a routerLink="/consumer/home" routerLinkActive="active">
+          <i class="icon home"></i>
+          <span *ngIf="!collapsed">Home</span>
+        </a>
+
+        <a routerLink="/consumer/connections/new" routerLinkActive="active">
+          <i class="icon plug"></i>
+          <span *ngIf="!collapsed">New Connection</span>
+        </a>
+
+        <a routerLink="/consumer/bills" routerLinkActive="active">
+          <i class="icon receipt"></i>
+          <span *ngIf="!collapsed">My Bills</span>
+        </a>
+      </ng-container>
+
+    </nav>
+
+    <!-- LOGOUT -->
+    <div class="logout">
+      <button (click)="openLogoutConfirm()">
+        <i class="icon logout"></i>
+        <span *ngIf="!collapsed">Logout</span>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
+
+<!-- LOGOUT CONFIRM -->
+<div class="confirm-overlay" *ngIf="showLogoutConfirm">
+  <div class="confirm-box">
+    <h3>Confirm Logout</h3>
+    <p>Are you sure you want to logout?</p>
+
+    <div class="actions">
+      <button class="btn cancel" (click)="closeLogoutConfirm()">Cancel</button>
+      <button class="btn danger" (click)="confirmLogout()">Logout</button>
+    </div>
+  </div>
+</div>

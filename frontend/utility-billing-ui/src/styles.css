@@ -1,12 +1,39 @@
-/* Disable text selection highlight */
-* {
-  -webkit-tap-highlight-color: transparent;
+
+.cdk-overlay-pane {
+  margin-top: 16px !important;
+  margin-right: 16px !important;
+  max-width: unset !important;
 }
 
-::selection {
-  background: transparent;
+
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  max-width: 420px !important;
+  min-width: unset !important;
+  width: auto !important;
+  border-radius: 14px !important;
+  padding: 14px 18px !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.25) !important;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-::-moz-selection {
-  background: transparent;
+.toast-success .mdc-snackbar__surface {
+  background-color: #edf7ed !important;
+  color: #1b5e20 !important;
+  border-left: 4px solid #43a047 !important;
+  
+}
+
+.toast-error .mdc-snackbar__surface {
+  background-color: #fdecea !important; 
+  color: #b71c1c !important;
+  border-left: 4px solid #e53935 !important;
+
+}
+
+/* Close button */
+.mat-mdc-snack-bar-action {
+  color: black !important;
+  font-weight: 600;
 }
