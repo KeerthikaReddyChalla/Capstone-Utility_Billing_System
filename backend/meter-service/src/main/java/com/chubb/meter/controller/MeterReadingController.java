@@ -22,10 +22,7 @@ public class MeterReadingController {
 
     private final MeterReadingService service;
     private final MeterReadingRepository repository;
-    /**
-     * Create a meter reading for a connection
-     * Role: BILLING_OFFICER
-     */
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('BILLING_OFFICER')")
@@ -34,10 +31,7 @@ public class MeterReadingController {
         return service.create(request);
     }
 
-    /**
-     * Get all meter readings for a connection
-     * Role: ADMIN, BILLING_OFFICER
-     */
+
     @GetMapping("/{connectionId}")
     @PreAuthorize("hasAnyRole('BILLING_OFFICER','ADMIN')")
     public List<MeterReadingResponse> getByConnection(
@@ -45,10 +39,7 @@ public class MeterReadingController {
         return service.getByConnection(connectionId);
     }
 
-    /**
-     * Get latest meter reading for a connection
-     * Role: ADMIN, BILLING_OFFICER
-     */
+
     @GetMapping("/latest/{connectionId}")
     @PreAuthorize("hasAnyRole('BILLING_OFFICER','ADMIN')")
     public MeterReadingResponse getLatest(
@@ -63,7 +54,7 @@ public class MeterReadingController {
         MeterReadingResponse response = service.getPrevious(connectionId);
 
         if (response == null) {
-            return ResponseEntity.noContent().build(); // 204
+            return ResponseEntity.noContent().build(); 
         }
 
         return ResponseEntity.ok(response); 
