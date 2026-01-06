@@ -32,7 +32,6 @@ export class RegisterComponent {
 
   register(): void {
 
-    /* ---------- BASIC VALIDATIONS ---------- */
     if (!this.registerData.name.trim()) {
       this.showToast('Full name is required', 'error');
       return;
@@ -55,7 +54,6 @@ export class RegisterComponent {
 
     this.loading = true;
 
-    /* ---------- API CALL ---------- */
     this.http.post(
       'http://localhost:9999/auth/register',
       this.registerData
@@ -63,7 +61,6 @@ export class RegisterComponent {
       next: () => {
         this.loading = false;
 
-        // store pending email for approval polling
         localStorage.setItem('pending_email', this.registerData.email);
 
         this.showToast(
@@ -87,8 +84,6 @@ export class RegisterComponent {
       }
     });
   }
-
-  /* ---------- HELPERS ---------- */
 
   private isValidEmail(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);

@@ -18,10 +18,9 @@ export class UsersComponent implements OnInit {
   users: User[] = [];
   filteredUsers: User[] = [];
 
-  // ✅ PAGINATION
   pagedUsers: User[] = [];
   currentPage = 1;
-  pageSize = 8;          // change if you want
+  pageSize = 8;        
   totalPages = 0;
 
   search = '';
@@ -42,7 +41,6 @@ export class UsersComponent implements OnInit {
     this.loadUsers();
   }
 
-  /* ---------- LOAD USERS ---------- */
   loadUsers(): void {
     this.loading = true;
 
@@ -60,7 +58,6 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  /* ---------- FILTER ---------- */
   applyFilters(): void {
     this.filteredUsers = this.users.filter(user => {
       const matchesRole =
@@ -75,14 +72,12 @@ export class UsersComponent implements OnInit {
       return matchesRole && matchesSearch;
     });
 
-    // ✅ PAGINATION RESET AFTER FILTER
     this.currentPage = 1;
     this.updatePagination();
 
     this.cdr.detectChanges();
   }
 
-  /* ---------- PAGINATION LOGIC ---------- */
   updatePagination(): void {
     this.totalPages = Math.ceil(this.filteredUsers.length / this.pageSize);
 
@@ -106,21 +101,18 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  /* ---------- OPEN CONFIRM ---------- */
   openDeleteConfirm(user: User): void {
     this.selectedUser = user;
     this.showConfirmDialog = true;
     this.cdr.detectChanges();
   }
 
-  /* ---------- CLOSE CONFIRM ---------- */
   closeConfirm(): void {
     this.showConfirmDialog = false;
     this.selectedUser = null;
     this.cdr.detectChanges();
   }
 
-  /* ---------- CONFIRM DELETE ---------- */
   confirmDelete(): void {
     if (!this.selectedUser) return;
 
@@ -141,7 +133,6 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  /* ---------- TOAST ---------- */
   private showToast(message: string, type: 'success' | 'error'): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,

@@ -1,6 +1,5 @@
 <div class="accounts-page">
 
-  <!-- PAGE HEADER -->
   <div class="page-header">
     <h2>Bills Overview</h2>
     <p class="subtitle">
@@ -8,12 +7,10 @@
     </p>
   </div>
 
-  <!-- EMPTY STATE -->
   <div *ngIf="!bills.length" class="empty-state">
     No bills available
   </div>
 
-  <!-- BILLS GRID -->
   <div class="bill-grid">
 
     <div class="bill-card" *ngFor="let b of bills">

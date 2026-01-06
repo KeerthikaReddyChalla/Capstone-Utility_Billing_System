@@ -59,9 +59,7 @@ export class MeterReadingsComponent implements OnInit {
     });
   }
 
-  // ===============================
-  // LOAD READINGS
-  // ===============================
+
   loadReadings(): void {
     if (!this.form.connectionId) {
       this.showToast('Enter connection ID', 'error');
@@ -84,9 +82,6 @@ export class MeterReadingsComponent implements OnInit {
     });
   }
 
-  // ===============================
-  // CREATE READING
-  // ===============================
   createReading(): void {
 
     if (

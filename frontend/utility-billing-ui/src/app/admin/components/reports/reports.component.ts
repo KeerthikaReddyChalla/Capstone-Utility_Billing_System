@@ -45,8 +45,6 @@ export class ReportsComponent implements OnInit {
   }
 
 
-  /* ---------- CALCULATIONS ---------- */
-
   calculateStats(): void {
     const paidBills = this.bills.filter(b => b.status === 'PAID');
     const dueBills = this.bills.filter(
@@ -68,8 +66,6 @@ export class ReportsComponent implements OnInit {
       ? 0
       : Math.round((this.totalRevenue / total) * 100);
   }
-
-  /* ---------- CHARTS ---------- */
 
   renderCharts(): void {
     this.renderRevenueChart();

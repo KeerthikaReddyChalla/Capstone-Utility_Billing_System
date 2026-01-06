@@ -43,7 +43,6 @@ export class LoginComponent {
     this.authService.login(this.loginData).subscribe({
       next: (response) => {
 
-        // Save JWT + userId
         this.tokenService.saveToken(response.token);
         this.tokenService.saveUserId(response.userId);
 
@@ -77,7 +76,6 @@ export class LoginComponent {
     });
   }
 
-  /* ---------- ROLE REDIRECTION ---------- */
   private redirectByRole(role: string | null): void {
     switch (role) {
       case 'ADMIN':
@@ -101,7 +99,6 @@ export class LoginComponent {
     }
   }
 
-  /* ---------- TOAST ---------- */
   private showToast(message: string, type: 'success' | 'error'): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,

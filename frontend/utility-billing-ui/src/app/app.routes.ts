@@ -6,7 +6,6 @@ import { RoleGuard } from './core/guards/role-guard';
 import { AdminDashboardComponent } from './admin/dashboard/dashboard';
 import { BillingDashboardComponent } from './billing-officer/dashboard/dashboard';
 import { AccountsDashboardComponent } from './accounts-officer/dashboard/dashboard';
-import { ConsumerDashboardComponent } from './consumer/dashboard/dashboard';
 import { RegisterComponent } from './auth/register/register';
 import { BillGenerationComponent } from './billing-officer/bill-generation/bill-generation';
 import { MeterReadingsComponent } from './billing-officer/meter-readings/meter-readings';

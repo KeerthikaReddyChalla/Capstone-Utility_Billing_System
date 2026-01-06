@@ -17,7 +17,6 @@ export class AdminDashboardComponent {
   pendingUsers: PendingUser[] = [];
   loading = false;
 
-  /* CONFIRM DIALOG */
   showConfirmDialog = false;
   selectedUser: PendingUser | null = null;
   action: 'APPROVE' | 'DISAPPROVE' | null = null;

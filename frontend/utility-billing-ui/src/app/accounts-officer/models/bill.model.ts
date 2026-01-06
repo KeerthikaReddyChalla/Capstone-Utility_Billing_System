@@ -1,11 +1,11 @@
 export interface Bill {
-  id: string;              // MongoDB ID
-  billId: string;          // BILL-2024-001
+  id: string;           
+  billId: string;         
   consumerId: string;
   connectionId: string;
-  utilityType: string;     // ELECTRICITY | WATER | GAS | INTERNET
+  utilityType: string;     
   amount: number;
-  dueDate: string;         // ISO date string
+  dueDate: string;   
   status: 'PAID' | 'GENERATED' | 'OVERDUE';
-  createdAt: string;       // ISO date
+  createdAt: string;  
 }

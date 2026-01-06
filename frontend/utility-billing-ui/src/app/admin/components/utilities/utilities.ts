@@ -24,7 +24,6 @@ export class UtilitiesComponent implements OnInit {
     description: ''
   };
 
-  /* CONFIRM MODAL */
   showConfirm = false;
   selectedUtility: UtilityResponse | null = null;
 

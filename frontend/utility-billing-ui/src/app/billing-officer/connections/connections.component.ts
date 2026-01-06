@@ -15,10 +15,9 @@ export class ConnectionsComponent implements OnInit {
 
   connections: ConnectionBilling[] = [];
 
-  // ✅ PAGINATION
   pagedConnections: ConnectionBilling[] = [];
   currentPage = 1;
-  pageSize = 6;        // cards per page
+  pageSize = 6;   
   totalPages = 0;
 
   loading = true;
@@ -41,7 +40,6 @@ export class ConnectionsComponent implements OnInit {
         this.connections = data;
         this.loading = false;
 
-        // ✅ PAGINATION INIT
         this.currentPage = 1;
         this.updatePagination();
 
@@ -54,7 +52,6 @@ export class ConnectionsComponent implements OnInit {
     });
   }
 
-  /* ---------- PAGINATION ---------- */
   private updatePagination(): void {
     this.totalPages = Math.ceil(this.connections.length / this.pageSize);
 
@@ -78,7 +75,6 @@ export class ConnectionsComponent implements OnInit {
     }
   }
 
-  /* ---------- EXISTING ---------- */
   addReading(connection: ConnectionBilling): void {
     this.router.navigate(
       ['/billing/readings'],
