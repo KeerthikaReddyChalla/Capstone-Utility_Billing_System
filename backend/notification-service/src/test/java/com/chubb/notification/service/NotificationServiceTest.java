@@ -1,11 +1,13 @@
 package com.chubb.notification.service;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,13 +26,46 @@ class NotificationServiceTest {
     private NotificationService service;
 
     @Test
-    void save_success() {
-        NotificationEventDTO dto =
-                new NotificationEventDTO("c1", "BILL", "Bill Generated");
+    void save_success_maps_all_fields() {
+
+        NotificationEventDTO dto = NotificationEventDTO.builder()
+                .consumerId("c1")
+                .type("PAYMENT")
+                .message("Payment successful")
+                .build();
+
+        ArgumentCaptor<Notification> captor =
+                ArgumentCaptor.forClass(Notification.class);
 
         service.save(dto);
 
-        verify(repository, times(1)).save(any(Notification.class));
+        verify(repository).save(captor.capture());
+
+        Notification saved = captor.getValue();
+
+        assertThat(saved.getConsumerId()).isEqualTo("c1");
+        assertThat(saved.getType()).isEqualTo("PAYMENT");
+        assertThat(saved.getMessage()).isEqualTo("Payment successful");
+        assertThat(saved.getCreatedAt()).isNotNull();
+    }
+
+    @Test
+    void getByConsumer_success_returns_data() {
+
+        Notification n = Notification.builder()
+                .consumerId("c1")
+                .type("REMINDER")
+                .message("Bill overdue")
+                .build();
+
+        when(repository.findByConsumerId("c1"))
+                .thenReturn(List.of(n));
+
+        List<Notification> result =
+                service.getByConsumer("c1");
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getMessage())
+                .isEqualTo("Bill overdue");
     }
 }
-

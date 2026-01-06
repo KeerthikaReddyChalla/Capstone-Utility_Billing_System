@@ -1,8 +1,6 @@
 package com.chubb.payment.models;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,12 +15,10 @@ public class Payment {
 
     @Id
     private String id;
-
     private String billId;
     private String consumerId;
-
-    private BigDecimal amount;
-    private PaymentStatus status;
-
-    private LocalDateTime paymentDate;
+    private double amount;
+    private String method; // CARD, UPI
+    private PaymentStatus status; // INITIATED, COMPLETED
+    private LocalDateTime paidAt;
 }

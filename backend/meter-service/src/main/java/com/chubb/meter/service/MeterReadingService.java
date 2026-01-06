@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.chubb.meter.dto.MeterReadingRequest;
 import com.chubb.meter.dto.MeterReadingResponse;
 import com.chubb.meter.exception.DuplicateReadingException;
+import com.chubb.meter.exception.InvalidConnectionStateException;
 import com.chubb.meter.exception.ResourceNotFoundException;
 import com.chubb.meter.feign.ConnectionClient;
 import com.chubb.meter.models.MeterReading;
@@ -28,9 +29,13 @@ public class MeterReadingService {
  
         var connection = connectionClient.getConnection(request.getConnectionId());
 
-        if (!connection.isActive()) {
-            throw new IllegalStateException("Connection is inactive");
+
+        if (!"ACTIVE".equals(connection.getStatus())) {
+            throw new InvalidConnectionStateException(
+                "Cannot add meter reading. Connection status is " + connection.getStatus()
+            );
         }
+
 
    
         boolean exists = repository.existsByConnectionIdAndReadingDate(
@@ -61,7 +66,7 @@ public class MeterReadingService {
         return repository.findByConnectionId(connectionId)
                 .stream()
                 .map(this::map)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public MeterReadingResponse getLatest(String connectionId) {
@@ -107,6 +112,14 @@ public class MeterReadingService {
                 .readingDate(previous.getReadingDate())
                 .createdAt(previous.getCreatedAt())
                 .build();
+    }
+    
+    public List<String> getAllConnectionIdsWithReadings() {
+        return repository.findAll()
+                .stream()
+                .map(MeterReading::getConnectionId)
+                .distinct()
+                .toList();
     }
 
 

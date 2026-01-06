@@ -1,8 +1,13 @@
 package com.chubb.consumer.dto;
 
+import lombok.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 public class ConsumerRequestDTO {
 

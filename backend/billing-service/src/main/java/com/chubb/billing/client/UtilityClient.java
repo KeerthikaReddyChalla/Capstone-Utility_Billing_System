@@ -10,5 +10,5 @@ import com.chubb.billing.dto.UtilityResponse;
 public interface UtilityClient {
 
     @GetMapping("/utilities/{utilityId}")
-    UtilityResponse getUtility(@PathVariable String utilityId);
+    UtilityResponse getUtility(@PathVariable("utilityId") String utilityId);
 }

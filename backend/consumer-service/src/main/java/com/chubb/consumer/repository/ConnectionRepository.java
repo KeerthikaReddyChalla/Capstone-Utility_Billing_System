@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface ConnectionRepository extends MongoRepository<Connection, String> {
     List<Connection> findByConsumerId(String consumerId);
+    
 }
 

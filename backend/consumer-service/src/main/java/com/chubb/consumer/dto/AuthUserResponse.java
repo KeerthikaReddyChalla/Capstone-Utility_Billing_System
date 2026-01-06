@@ -1,7 +1,14 @@
 package com.chubb.consumer.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
 public class AuthUserResponse {
 
@@ -9,5 +16,5 @@ public class AuthUserResponse {
     private String name;
     private String email;
     private String role;
-    private boolean active;
+    private String status;
 }

@@ -1,117 +1,235 @@
 package com.chubb.meter.service;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import com.chubb.meter.dto.MeterReadingRequest;
+import com.chubb.meter.dto.MeterReadingResponse;
 import com.chubb.meter.exception.DuplicateReadingException;
+import com.chubb.meter.exception.InvalidConnectionStateException;
 import com.chubb.meter.exception.ResourceNotFoundException;
+import com.chubb.meter.feign.ConnectionClient;
+import com.chubb.meter.feign.ConnectionDTO;
 import com.chubb.meter.models.MeterReading;
 import com.chubb.meter.repository.MeterReadingRepository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
-
+/**
+ * Pure unit tests – NO Spring context
+ */
 @ExtendWith(MockitoExtension.class)
 class MeterReadingServiceTest {
 
     @Mock
     private MeterReadingRepository repository;
 
+    @Mock
+    private ConnectionClient connectionClient;
+
     @InjectMocks
     private MeterReadingService service;
 
-    private MeterReadingRequest request;
-    private MeterReading reading;
-
-    @BeforeEach
-    void setUp() {
-
-        request = new MeterReadingRequest();
-        request.setConnectionId("CONN1");
-        request.setReadingValue(120.5);
-        request.setReadingDate(LocalDate.now());
-
-        reading = MeterReading.builder()
-                .id("R1")
-                .connectionId("CONN1")
-                .readingValue(120.5)
-                .readingDate(LocalDate.now())
-                .createdAt(LocalDateTime.now())
-                .build();
-    }
-
     @Test
-    void createMeterReading_success() {
+    void create_success() {
 
-        when(repository.existsByConnectionIdAndReadingDate(
-                anyString(), any()))
+   
+    	ConnectionDTO connection = new ConnectionDTO();
+    	connection.setId("c1");
+    	connection.setStatus("ACTIVE");
+
+    	when(connectionClient.getConnection("c1")).thenReturn(connection);
+        when(repository.existsByConnectionIdAndReadingDate(any(), any()))
                 .thenReturn(false);
+        when(repository.save(any())).thenAnswer(i -> i.getArgument(0));
 
-        when(repository.save(any(MeterReading.class)))
-                .thenReturn(reading);
+        MeterReadingRequest request = MeterReadingRequest.builder()
+                .connectionId("c1")
+                .consumerId("cons1")
+                .utilityId("u1")
+                .readingValue(123.0)
+                .readingDate(LocalDate.now())
+                .build();
 
-        var response = service.create(request);
-
-        assertNotNull(response);
-        assertEquals("CONN1", response.getConnectionId());
-        assertEquals(120.5, response.getReadingValue());
-
-        verify(repository).save(any(MeterReading.class));
+        assertThat(service.create(request)).isNotNull();
     }
 
     @Test
-    void createMeterReading_duplicate_throwsException() {
+    void create_fails_when_connection_not_active() {
 
-        when(repository.existsByConnectionIdAndReadingDate(
-                anyString(), any()))
+    	ConnectionDTO connection = new ConnectionDTO();
+    	connection.setId("c1");
+    	connection.setStatus("INACTIVE");
+
+    	when(connectionClient.getConnection("c1")).thenReturn(connection);
+
+
+        MeterReadingRequest request = MeterReadingRequest.builder()
+                .connectionId("c1")
+                .readingDate(LocalDate.now())
+                .build();
+
+        assertThatThrownBy(() -> service.create(request))
+                .isInstanceOf(InvalidConnectionStateException.class);
+    }
+
+    @Test
+    void create_fails_when_duplicate_reading() {
+
+    	ConnectionDTO connection = new ConnectionDTO();
+    	connection.setId("c1");
+    	connection.setStatus("ACTIVE");
+
+    	when(connectionClient.getConnection("c1")).thenReturn(connection);
+
+        when(repository.existsByConnectionIdAndReadingDate(any(), any()))
                 .thenReturn(true);
 
-        assertThrows(DuplicateReadingException.class,
-                () -> service.create(request));
+        MeterReadingRequest request = MeterReadingRequest.builder()
+                .connectionId("c1")
+                .readingDate(LocalDate.now())
+                .build();
 
-        verify(repository, never()).save(any());
-    }
-
-    @Test
-    void getByConnection_returnsList() {
-
-        when(repository.findByConnectionId("CONN1"))
-                .thenReturn(List.of(reading));
-
-        var result = service.getByConnection("CONN1");
-
-        assertEquals(1, result.size());
-        assertEquals("CONN1", result.get(0).getConnectionId());
+        assertThatThrownBy(() -> service.create(request))
+                .isInstanceOf(DuplicateReadingException.class);
     }
 
     @Test
     void getLatest_success() {
 
-        when(repository.findTopByConnectionIdOrderByReadingDateDesc("CONN1"))
-                .thenReturn(Optional.of(reading));
+        when(repository.findTopByConnectionIdOrderByReadingDateDesc("c1"))
+                .thenReturn(Optional.of(new MeterReading()));
 
-        var result = service.getLatest("CONN1");
-
-        assertNotNull(result);
-        assertEquals("R1", result.getId());
+        assertThat(service.getLatest("c1")).isNotNull();
     }
 
     @Test
-    void getLatest_notFound() {
+    void getPrevious_returns_null_when_only_one_reading() {
 
-        when(repository.findTopByConnectionIdOrderByReadingDateDesc("CONN1"))
+        when(repository.findTop2ByConnectionIdOrderByReadingDateDesc("c1"))
+                .thenReturn(List.of(new MeterReading()));
+
+        assertThat(service.getPrevious("c1")).isNull();
+    }
+
+    @Test
+    void getAllConnectionIdsWithReadings_success() {
+
+        when(repository.findAll()).thenReturn(
+                List.of(
+                        MeterReading.builder().connectionId("c1").build(),
+                        MeterReading.builder().connectionId("c2").build()
+                )
+        );
+
+        assertThat(service.getAllConnectionIdsWithReadings())
+                .containsExactlyInAnyOrder("c1", "c2");
+    }
+    
+    @Test
+    void getLatest_throws_when_not_found() {
+
+        when(repository.findTopByConnectionIdOrderByReadingDateDesc("c1"))
                 .thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class,
-                () -> service.getLatest("CONN1"));
+        assertThatThrownBy(() -> service.getLatest("c1"))
+                .isInstanceOf(ResourceNotFoundException.class);
     }
+
+    @Test
+    void getByConnection_success() {
+
+        MeterReading r = MeterReading.builder()
+                .id("m1")
+                .connectionId("c1")
+                .consumerId("cons1")
+                .utilityId("u1")
+                .readingValue(100)
+                .readingDate(LocalDate.now())
+                .build();
+
+        when(repository.findByConnectionId("c1"))
+                .thenReturn(List.of(r));
+
+        List<MeterReadingResponse> result =
+                service.getByConnection("c1");
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getConnectionId()).isEqualTo("c1");
+    }
+
+    @Test
+    void getPrevious_success_when_two_readings_exist() {
+
+        MeterReading latest = MeterReading.builder()
+                .id("m2")
+                .connectionId("c1")
+                .readingDate(LocalDate.now())
+                .build();
+
+        MeterReading previous = MeterReading.builder()
+                .id("m1")
+                .connectionId("c1")
+                .readingDate(LocalDate.now().minusDays(1))
+                .build();
+
+        when(repository.findTop2ByConnectionIdOrderByReadingDateDesc("c1"))
+                .thenReturn(List.of(latest, previous));
+
+        MeterReadingResponse result =
+                service.getPrevious("c1");
+
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo("m1");
+    }
+
+    @Test
+    void create_populates_all_fields() {
+
+        ConnectionDTO connection = new ConnectionDTO();
+        connection.setId("c1");
+        connection.setStatus("ACTIVE");
+
+        when(connectionClient.getConnection("c1"))
+                .thenReturn(connection);
+
+        when(repository.existsByConnectionIdAndReadingDate(any(), any()))
+                .thenReturn(false);
+
+        when(repository.save(any()))
+                .thenAnswer(i -> i.getArgument(0));
+
+        MeterReadingRequest request = MeterReadingRequest.builder()
+                .connectionId("c1")
+                .consumerId("cons1")
+                .utilityId("u1")
+                .readingValue(200)
+                .readingDate(LocalDate.now())
+                .build();
+
+        MeterReadingResponse response =
+                service.create(request);
+
+        assertThat(response.getConnectionId()).isEqualTo("c1");
+        assertThat(response.getConsumerId()).isEqualTo("cons1");
+        assertThat(response.getUtilityId()).isEqualTo("u1");
+    }
+
+    @Test
+    void getAllConnectionIdsWithReadings_empty() {
+
+        when(repository.findAll()).thenReturn(List.of());
+
+        assertThat(service.getAllConnectionIdsWithReadings())
+                .isEmpty();
+    }
+
 }

@@ -85,5 +85,77 @@
         	<artifactId>spring-boot-devtools</artifactId>
         </dependency>
     </dependencies>
+<build>
+    <plugins>
+
+        <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.11</version>
+            <executions>
+
+                <!-- Attach JaCoCo agent -->
+                <execution>
+                    <id>prepare-agent</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+
+                <!-- Generate module-level report -->
+                <execution>
+                    <id>report</id>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
+
+            </executions>
+             <configuration>
+                <excludes>
+                    <!-- DTOs -->
+                    <exclude>**/dto/**</exclude>
+
+                    <!-- Models / Entities -->
+                    <exclude>**/model/**</exclude>
+                    <exclude>**/models/**</exclude>
+                    <exclude>**/entity/**</exclude>
+                    <exclude>**/exception/**</exclude>
+
+                    <!-- Config & Security -->
+                    <exclude>**/config/**</exclude>
+                    <exclude>**/security/**</exclude>
+                    <exclude>**/filter/**</exclude>
+
+                    <!-- Clients -->
+                    <exclude>**/client/**</exclude>
+                    <exclude>**/feign/**</exclude>
+
+                    <!-- Utils / Events / Constants -->
+                    <exclude>**/util/**</exclude>
+                    <exclude>**/utils/**</exclude>
+                    <exclude>**/event/**</exclude>
+                    <exclude>**/constants/**</exclude>
+
+                    <!-- Spring Boot main class -->
+                    <exclude>**/*Application.class</exclude>
+                </excludes>
+            </configuration>
+        </plugin>
+<plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>repackage</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
 
 </project>

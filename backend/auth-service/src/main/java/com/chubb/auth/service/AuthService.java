@@ -35,5 +35,6 @@ public interface AuthService {
     
     public List<PendingUserResponse> getPendingConsumers();
     public User getByEmail(String email);
+    public boolean isUserActiveByEmail(String email);
 }
 

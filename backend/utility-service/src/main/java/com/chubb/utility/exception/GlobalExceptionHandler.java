@@ -10,23 +10,32 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<Map<String, String>> handleNotFound(
+	        ResourceNotFoundException ex) {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("error", ex.getMessage()));
-    }
+	    return ResponseEntity
+	            .status(HttpStatus.NOT_FOUND)
+	            .body(Map.of("error", ex.getMessage()));
+	}
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidation(MethodArgumentNotValidException ex) {
-        return ResponseEntity.badRequest()
-                .body(Map.of("error", "Validation failed"));
-    }
-    @ExceptionHandler(ResourceConflictException.class)
-    public ResponseEntity<?> handleConflict(ResourceConflictException ex) {
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(Map.of("error", ex.getMessage()));
-    }
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Map<String, String>> handleValidation(
+	        MethodArgumentNotValidException ex) {
+
+	    return ResponseEntity
+	            .badRequest()
+	            .body(Map.of("error", "Validation failed"));
+	}
+
+	@ExceptionHandler(ResourceConflictException.class)
+	public ResponseEntity<Map<String, String>> handleConflict(
+	        ResourceConflictException ex) {
+
+	    return ResponseEntity
+	            .status(HttpStatus.CONFLICT)
+	            .body(Map.of("error", ex.getMessage()));
+	}
+
 
 }

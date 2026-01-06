@@ -15,6 +15,10 @@ public class RabbitConfig {
     public TopicExchange utilityExchange() {
         return new TopicExchange("utility.events.exchange");
     }
+    @Bean
+    public TopicExchange notificationExchange() {
+        return new TopicExchange("notification.exchange");
+    }
 
     @Bean
     public MessageConverter jsonMessageConverter() {

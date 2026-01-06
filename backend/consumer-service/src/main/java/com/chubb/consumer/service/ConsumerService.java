@@ -10,7 +10,6 @@ import com.chubb.consumer.models.Consumer;
 import com.chubb.consumer.repository.ConsumerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import java.util.List;
 
 @Service
@@ -29,7 +28,7 @@ public class ConsumerService {
             throw new IllegalStateException("User is not a consumer");
         }
 
-        if (!user.isActive()) {
+        if (!"ACTIVE".equals(user.getStatus())) {
             throw new IllegalStateException("Consumer is not yet approved");
         }
 

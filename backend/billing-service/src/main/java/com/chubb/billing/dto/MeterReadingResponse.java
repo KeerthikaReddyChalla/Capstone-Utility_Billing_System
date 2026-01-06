@@ -1,9 +1,14 @@
 package com.chubb.billing.dto;
 
+import lombok.*;
 import lombok.Data;
 
 import java.time.LocalDate;
 
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class MeterReadingResponse {
 

@@ -23,18 +23,14 @@ public class ConsumerController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ConsumerResponseDTO> create(@Valid @RequestBody ConsumerRequestDTO dto) {
-    	Authentication auth =
-                SecurityContextHolder.getContext().getAuthentication();
-
-        System.out.println(">>> Authentication object = " + auth);
-        System.out.println(">>> Authorities = " + auth.getAuthorities());
+    	
 
         return new ResponseEntity<>(service.createConsumer(dto), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','CONSUMER','BILLING_OFFICER')")
-    public ResponseEntity<ConsumerResponseDTO> get(@PathVariable String id) {
+    public ResponseEntity<ConsumerResponseDTO> get(@PathVariable("id") String id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
@@ -46,7 +42,7 @@ public class ConsumerController {
     
     @DeleteMapping("/{consumerId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable String consumerId) {
+    public ResponseEntity<Void> delete(@PathVariable("consumerId") String consumerId) {
         service.deleteConsumer(consumerId);
         return ResponseEntity.noContent().build();
     }

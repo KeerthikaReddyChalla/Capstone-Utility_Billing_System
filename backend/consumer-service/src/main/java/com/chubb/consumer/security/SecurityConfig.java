@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -52,19 +51,18 @@ public class SecurityConfig {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
 
         converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            System.out.println(">>> JWT CLAIMS = " + jwt.getClaims());
+        
 
             Collection<String> authorities =
                     jwt.getClaimAsStringList("authorities");
 
             if (authorities == null) {
-                System.out.println(">>> NO AUTHORITIES FOUND");
+            
                 return java.util.List.of();
             }
 
             return authorities.stream()
                     .map(SimpleGrantedAuthority::new)
-                    .peek(a -> System.out.println(">>> Granted Authority = " + a.getAuthority()))
                     .collect(Collectors.toList());
         });
 

@@ -1,7 +1,4 @@
 package com.chubb.consumer.models;
-import com.chubb.consumer.models.ConnectionStatus;
-
-import com.chubb.consumer.models.TariffType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -28,7 +25,6 @@ public class Connection {
     @Enumerated(EnumType.STRING)
     private ConnectionStatus status;
 
-    private boolean active;
     private LocalDateTime requestedAt;
     private LocalDateTime activatedAt;
 }

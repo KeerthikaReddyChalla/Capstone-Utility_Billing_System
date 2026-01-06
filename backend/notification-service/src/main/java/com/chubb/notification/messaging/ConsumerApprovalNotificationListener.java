@@ -14,7 +14,6 @@ public class ConsumerApprovalNotificationListener {
 
     @RabbitListener(queues = "notification.auth.queue")
     public void handleApprovalEvent(ConsumerApprovedEvent event) {
-    	System.out.println(">>> NOTIFICATION EVENT RECEIVED: " + event);
 
         if (event.isApproved()) {
             emailService.sendEmail(

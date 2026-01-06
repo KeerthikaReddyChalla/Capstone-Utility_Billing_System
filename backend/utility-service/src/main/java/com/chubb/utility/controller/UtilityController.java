@@ -1,6 +1,8 @@
 package com.chubb.utility.controller;
 
 import java.util.List;
+import com.chubb.utility.dto.UtilityMiniDTO;
+
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,35 +32,46 @@ public class UtilityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(req));
     }
 
-    @PreAuthorize("hasRole('CONSUMER')")
+    @PreAuthorize("hasAnyRole('CONSUMER','ADMIN')")
     @GetMapping
     public List<UtilityResponse> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public UtilityResponse get(@PathVariable String id) {
+    public UtilityResponse get(@PathVariable("id") String id) {
         return service.getById(id);
     }
 
     @PutMapping("/{id}")
-    public UtilityResponse update(@PathVariable String id,
+    public UtilityResponse update(@PathVariable("id") String id,
                                   @Valid @RequestBody UtilityRequest req) {
         return service.update(id, req);
     }
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
 
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
-    @PreAuthorize("hasRole('CONSUMER')")
+    @PreAuthorize("hasAnyRole('CONSUMER', 'BILLING_OFFICER')")
     @GetMapping("/internal/{id}")
-    public UtilityResponse getInternal(@PathVariable String id) {
+    public UtilityResponse getInternal(@PathVariable("id") String id) {
         return service.getById(id);
     }
 
-    
+    @PreAuthorize("hasAnyRole('ADMIN','BILLING_OFFICER')")
+    @GetMapping("/bills/{id}")
+    public UtilityMiniDTO fetchUtility(@PathVariable("id") String id) {
+
+        UtilityResponse utility = service.getById(id);
+
+        return new UtilityMiniDTO(
+                utility.getId(),
+                utility.getName()
+        );
+    }
+
 
 }

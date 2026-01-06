@@ -15,4 +15,7 @@ public interface MeterReadingRepository extends MongoRepository<MeterReading, St
 
     Optional<MeterReading> findTopByConnectionIdOrderByReadingDateDesc(String connectionId);
     List<MeterReading> findTop2ByConnectionIdOrderByReadingDateDesc(String connectionId);
+    boolean existsByConnectionId(String connectionId);
+    
+    List<MeterReading> findAll();
 }

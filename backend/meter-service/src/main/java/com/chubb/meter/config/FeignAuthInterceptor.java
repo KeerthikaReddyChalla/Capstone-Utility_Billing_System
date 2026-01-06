@@ -3,7 +3,6 @@ package com.chubb.meter.config;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -14,9 +13,7 @@ public class FeignAuthInterceptor {
 
     @Bean
     public RequestInterceptor requestInterceptor() {
-        return new RequestInterceptor() {
-            @Override
-            public void apply(RequestTemplate template) {
+            return template -> {
 
                 ServletRequestAttributes attributes =
                         (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -31,7 +28,7 @@ public class FeignAuthInterceptor {
                 if (authHeader != null) {
                     template.header("Authorization", authHeader);
                 }
-            }
-        };
+            };
+
     }
 }

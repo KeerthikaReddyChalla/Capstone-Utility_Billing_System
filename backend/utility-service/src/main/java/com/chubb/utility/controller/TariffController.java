@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.chubb.utility.dto.CreateTariffRequest;
-import com.chubb.utility.dto.TariffRequest;
 import com.chubb.utility.dto.TariffResponse;
 import com.chubb.utility.dto.UpdateTariffRequest;
 import com.chubb.utility.service.TariffService;
@@ -36,7 +35,7 @@ public class TariffController {
 
     @PutMapping("/{tariffId}")
     public TariffResponse update(
-            @PathVariable String tariffId,
+            @PathVariable("tariffId") String tariffId,
             @Valid @RequestBody UpdateTariffRequest request) {
 
         return service.update(tariffId, request);
@@ -47,26 +46,26 @@ public class TariffController {
     }
 
     @GetMapping("/{tariffId}")
-    public TariffResponse getById(@PathVariable String tariffId) {
+    public TariffResponse getById(@PathVariable("tariffId") String tariffId) {
         return service.getById(tariffId);
     }
 
     @GetMapping("/utility/{utilityId}")
     public List<TariffResponse> getByUtility(
-            @PathVariable String utilityId) {
+            @PathVariable("utilityId") String utilityId) {
 
         return service.getByUtility(utilityId);
     }
     
     @GetMapping("/utility/{utilityId}/rate")
     @PreAuthorize("hasAnyRole('ADMIN','BILLING_OFFICER')")
-    public Double getRate(@PathVariable String utilityId) {
+    public Double getRate(@PathVariable("utilityId") String utilityId) {
         return service.getRateByUtilityId(utilityId);
     }
     @DeleteMapping("/{tariffId}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable String tariffId) {
+    public void delete(@PathVariable("tariffId") String tariffId) {
         service.delete(tariffId);
     }
 

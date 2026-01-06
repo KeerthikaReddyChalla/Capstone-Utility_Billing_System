@@ -10,7 +10,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import com.chubb.auth.config.RabbitConfig;
 import com.chubb.auth.dto.ChangePasswordRequest;
 import com.chubb.auth.dto.ConsumerApprovedEvent;
 import com.chubb.auth.dto.ForgotPasswordRequest;
@@ -70,7 +69,7 @@ public class AuthController {
     @GetMapping("/users/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN','BILLING_OFFICER')")
     public ResponseEntity<UserResponse> getUserById(
-            @PathVariable String userId) {
+            @PathVariable("userId") String userId) {
         return ResponseEntity.ok(authService.getUserById(userId));
     }
 
@@ -78,7 +77,7 @@ public class AuthController {
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
-    public void deleteUser(@PathVariable String id) {
+    public void deleteUser(@PathVariable("id") String id) {
         authService.deleteUser(id);
     }
    
@@ -110,7 +109,7 @@ public class AuthController {
                 "auth.consumer.approved",
                 event
         );
-        System.out.println(">>> EVENT PUBLISHED: " + event);
+    
 
         return ResponseEntity.ok().build();
     }
@@ -131,10 +130,16 @@ public class AuthController {
                 "auth.consumer.approved",
                 event
         );
-        System.out.println(">>> EVENT PUBLISHED: " + event);
+ 
 
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/pending-status")
+    public ResponseEntity<Boolean> getPendingStatus(@RequestParam("email") String email) {
+        boolean approved = authService.isUserActiveByEmail(email);
+        return ResponseEntity.ok(approved);
+    }
+
 
 
 

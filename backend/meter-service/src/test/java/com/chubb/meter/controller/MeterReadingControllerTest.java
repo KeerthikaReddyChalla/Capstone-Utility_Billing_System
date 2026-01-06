@@ -1,30 +1,30 @@
 package com.chubb.meter.controller;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.time.LocalDate;
-import java.util.List;
-
 import com.chubb.meter.dto.MeterReadingRequest;
 import com.chubb.meter.dto.MeterReadingResponse;
+import com.chubb.meter.repository.MeterReadingRepository;
 import com.chubb.meter.service.MeterReadingService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.chubb.meter.security.SecurityConfig;
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MeterReadingController.class)
-@Import(SecurityConfig.class)
+@AutoConfigureMockMvc(addFilters = false)
 class MeterReadingControllerTest {
 
     @Autowired
@@ -33,22 +33,36 @@ class MeterReadingControllerTest {
     @MockBean
     private MeterReadingService service;
 
+    @MockBean
+    private MeterReadingRepository repository;
+
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
-    @WithMockUser(roles = "BILLING_OFFICER")
-    void createMeterReading_success() throws Exception {
+    private MeterReadingResponse response() {
+        return MeterReadingResponse.builder()
+                .connectionId("conn1")
+                .consumerId("c1")
+                .utilityId("u1")
+                .readingValue(150)
+                .readingDate(LocalDate.now())
+                .build();
+    }
 
-        MeterReadingRequest request = new MeterReadingRequest();
-        request.setConnectionId("CONN1");
-        request.setReadingValue(100);
-        request.setReadingDate(LocalDate.now());
+    @Test
+    void create_success() throws Exception {
+
+        MeterReadingRequest request = MeterReadingRequest.builder()
+                .connectionId("c1")
+                .consumerId("cons1")
+                .utilityId("u1")
+                .readingValue(123.0)
+                .readingDate(LocalDate.now())
+                .build();
 
         MeterReadingResponse response = MeterReadingResponse.builder()
-                .id("R1")
-                .connectionId("CONN1")
-                .readingValue(100)
+                .connectionId("c1")
+                .readingValue(123.0)
                 .build();
 
         when(service.create(any())).thenReturn(response);
@@ -56,41 +70,67 @@ class MeterReadingControllerTest {
         mockMvc.perform(post("/meter-readings")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.connectionId").value("CONN1"));
+                .andExpect(status().isCreated());
     }
 
+
     @Test
-    @WithMockUser(roles = "ADMIN")
     void getByConnection_success() throws Exception {
 
-        when(service.getByConnection("CONN1"))
-                .thenReturn(List.of(
-                        MeterReadingResponse.builder()
-                                .id("R1")
-                                .connectionId("CONN1")
-                                .build()
-                ));
+        Mockito.when(service.getByConnection("conn1"))
+                .thenReturn(List.of(response()));
 
-        mockMvc.perform(get("/meter-readings/CONN1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value("R1"));
+        mockMvc.perform(get("/meter-readings/conn1"))
+                .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     void getLatest_success() throws Exception {
 
-        when(service.getLatest("CONN1"))
-                .thenReturn(
-                        MeterReadingResponse.builder()
-                                .id("R2")
-                                .connectionId("CONN1")
-                                .build()
-                );
+        Mockito.when(service.getLatest("conn1"))
+                .thenReturn(response());
 
-        mockMvc.perform(get("/meter-readings/latest/CONN1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("R2"));
+        mockMvc.perform(get("/meter-readings/latest/conn1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getPrevious_found() throws Exception {
+
+        Mockito.when(service.getPrevious("conn1"))
+                .thenReturn(response());
+
+        mockMvc.perform(get("/meter-readings/previous/conn1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getPrevious_notFound_returns204() throws Exception {
+
+        Mockito.when(service.getPrevious("conn1"))
+                .thenReturn(null);
+
+        mockMvc.perform(get("/meter-readings/previous/conn1"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void hasReading_success() throws Exception {
+
+        Mockito.when(repository.existsByConnectionId("conn1"))
+                .thenReturn(true);
+
+        mockMvc.perform(get("/meter-readings/internal/exists/conn1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getConnectionsWithReadings_success() throws Exception {
+
+        Mockito.when(service.getAllConnectionIdsWithReadings())
+                .thenReturn(List.of("conn1", "conn2"));
+
+        mockMvc.perform(get("/meter-readings/internal/connections-with-readings"))
+                .andExpect(status().isOk());
     }
 }

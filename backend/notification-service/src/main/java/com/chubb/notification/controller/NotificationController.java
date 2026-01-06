@@ -22,7 +22,7 @@ public class NotificationController {
 
     @GetMapping("/{consumerId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('CONSUMER')")
-    public List<Notification> getNotifications(@PathVariable String consumerId) {
+    public List<Notification> getNotifications(@PathVariable("consumerId") String consumerId) {
         return service.getByConsumer(consumerId);
     }
 }

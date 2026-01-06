@@ -1,11 +1,14 @@
 package com.chubb.billing.dto;
 
+import lombok.*;
 import com.chubb.billing.models.BillStatus;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
 public class BillResponse {

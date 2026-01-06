@@ -19,11 +19,6 @@ public class JwtDebugFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
-
-        System.out.println(">>> Incoming request to consumer-service");
-        System.out.println(">>> Authorization header = " + authHeader);
-
         filterChain.doFilter(request, response);
     }
 }

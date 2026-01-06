@@ -3,6 +3,7 @@ package com.chubb.auth.security;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -19,8 +20,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String SECRET =
-            "ThisIsAVeryStrongJwtSecretKeyWithAtLeast32Chars!!";
+	@Value("${jwt.secret}")
+	private String secret;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -29,7 +30,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/login", "/auth/register",
-                                 "/auth/forgot-password", "/auth/reset-password")
+                                 "/auth/forgot-password", "/auth/reset-password", "/auth/pending-status")
                 .permitAll()
                 .anyRequest().authenticated()
             )
@@ -64,7 +65,7 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder() {
         SecretKey key = new SecretKeySpec(
-                SECRET.getBytes(),
+                secret.getBytes(),
                 "HmacSHA256"
         );
         return NimbusJwtDecoder.withSecretKey(key).build();

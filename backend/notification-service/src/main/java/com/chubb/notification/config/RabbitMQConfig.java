@@ -14,13 +14,31 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    // ---------- EXCHANGE ----------
+    /* ===================== EXCHANGES ===================== */
+
     @Bean
-    public TopicExchange exchange() {
+    public TopicExchange utilityExchange() {
         return new TopicExchange("utility.events.exchange");
     }
 
-    // ---------- QUEUES ----------
+    @Bean
+    public TopicExchange paymentOtpExchange() {
+        return new TopicExchange("payment.exchange");
+    }
+
+    @Bean
+    public TopicExchange billingExchange() {
+        return new TopicExchange("billing.exchange");
+    }
+
+    // 🔹 NEW: Notification exchange (forgot password, emails, etc.)
+    @Bean
+    public TopicExchange notificationExchange() {
+        return new TopicExchange("notification.exchange");
+    }
+
+    /* ===================== QUEUES ===================== */
+
     @Bean
     public Queue authQueue() {
         return new Queue("notification.auth.queue", true);
@@ -36,12 +54,29 @@ public class RabbitMQConfig {
         return new Queue("notification.payment.queue", true);
     }
 
-    // ---------- BINDINGS ----------
+    @Bean
+    public Queue paymentOtpQueue() {
+        return new Queue("payment.otp.queue", true);
+    }
+
+    @Bean
+    public Queue overdueReminderQueue() {
+        return new Queue("billing.overdue.reminder.queue", true);
+    }
+
+    // 🔹 NEW: Forgot password queue
+    @Bean
+    public Queue forgotPasswordQueue() {
+        return new Queue("forgot.password.queue", true);
+    }
+
+    /* ===================== BINDINGS ===================== */
+
     @Bean
     public Binding authBinding() {
         return BindingBuilder
                 .bind(authQueue())
-                .to(exchange())
+                .to(utilityExchange())
                 .with("auth.consumer.*");
     }
 
@@ -49,7 +84,7 @@ public class RabbitMQConfig {
     public Binding billBinding() {
         return BindingBuilder
                 .bind(billQueue())
-                .to(exchange())
+                .to(utilityExchange())
                 .with("bill.*");
     }
 
@@ -57,17 +92,44 @@ public class RabbitMQConfig {
     public Binding paymentBinding() {
         return BindingBuilder
                 .bind(paymentQueue())
-                .to(exchange())
+                .to(utilityExchange())
                 .with("payment.*");
     }
 
-    // ---------- MESSAGE CONVERTER ----------
+    @Bean
+    public Binding paymentOtpBinding() {
+        return BindingBuilder
+                .bind(paymentOtpQueue())
+                .to(paymentOtpExchange())
+                .with("payment.otp");
+    }
+
+    @Bean
+    public Binding overdueReminderBinding() {
+        return BindingBuilder
+                .bind(overdueReminderQueue())
+                .to(billingExchange())
+                .with("billing.overdue.reminder");
+    }
+
+    // 🔹 NEW: Forgot password binding
+    @Bean
+    public Binding forgotPasswordBinding() {
+        return BindingBuilder
+                .bind(forgotPasswordQueue())
+                .to(notificationExchange())
+                .with("auth.forgot.password");
+    }
+
+    /* ===================== MESSAGE CONVERTER ===================== */
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
-    // ---------- RABBIT TEMPLATE ----------
+    /* ===================== RABBIT TEMPLATE ===================== */
+
     @Bean
     public RabbitTemplate rabbitTemplate(
             ConnectionFactory connectionFactory,

@@ -3,6 +3,7 @@ package com.chubb.payment.security;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -14,11 +15,12 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private static final String SECRET = "ThisIsAVeryStrongJwtSecretKeyWithAtLeast32Chars!!";
+	@Value("${jwt.secret}")
+    private String secret;
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        SecretKey key = new SecretKeySpec(SECRET.getBytes(), "HmacSHA256");
+        SecretKey key = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
         return NimbusJwtDecoder.withSecretKey(key).build();
     }
     @Bean
